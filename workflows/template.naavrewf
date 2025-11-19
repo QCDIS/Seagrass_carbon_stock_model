@@ -1,0 +1,162 @@
+{
+  "chart": {
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "scale": 1,
+    "nodes": {
+      "fb98b747-b1b4-4203-b425-e406db9693e8": {
+        "id": "fb98b747-b1b4-4203-b425-e406db9693e8",
+        "position": {
+          "x": 556.5999755859375,
+          "y": 220
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "seagrass_species": {
+            "id": "seagrass_species",
+            "type": "right",
+            "properties": {
+              "color": "#c5c387",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": 252,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/48cedfe5-8c08-4e80-91e3-ad48fbd0e767/",
+            "owner": "koen.greuell@lifewatch.eu",
+            "virtual_lab": "openlab",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-vanilla-cell-build:v0.0.37",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-vanilla-cell-runtime:v0.0.37"
+            },
+            "dependencies": [],
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "seagrass_species",
+                "type": "list"
+              }
+            ],
+            "confs": [],
+            "params": [],
+            "secrets": [],
+            "title": "seagrass-species-setter-koen-greuell-lifewatch-eu",
+            "description": "seagrass-species-setter-koen-greuell-lifewatch-eu",
+            "created": "2025-11-18T10:52:53.072321Z",
+            "modified": "2025-11-18T10:52:53.307281Z",
+            "version": 1,
+            "container_image": "ghcr.io/naavre/cells-vl-openlab/seagrass-species-setter-koen-greuell-lifewatch-eu:f8de67a",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-openlab/tree/300b07cccd2aa6e74f2237cc3976f74490ebed02/seagrass-species-setter-koen-greuell-lifewatch-eu",
+            "next_version": null
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
+      },
+      "1e4db24e-952c-4363-9175-84270ee579a8": {
+        "id": "1e4db24e-952c-4363-9175-84270ee579a8",
+        "position": {
+          "x": 906.5999755859375,
+          "y": 227
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "seagrass_species": {
+            "id": "seagrass_species",
+            "type": "left",
+            "properties": {
+              "color": "#c5c387",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": -2,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/9cf8759b-1cd2-4c1d-82d4-5fc04b1f3b9e/",
+            "owner": "koen.greuell@lifewatch.eu",
+            "virtual_lab": "openlab",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-vanilla-cell-build:v0.0.37",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-vanilla-cell-runtime:v0.0.37"
+            },
+            "dependencies": [],
+            "inputs": [
+              {
+                "name": "seagrass_species",
+                "type": "list"
+              }
+            ],
+            "outputs": [],
+            "confs": [],
+            "params": [
+              {
+                "name": "param_latitude",
+                "type": "str",
+                "default_value": "56.0953"
+              },
+              {
+                "name": "param_longitude",
+                "type": "str",
+                "default_value": "14.2785"
+              },
+              {
+                "name": "param_seagrass_species",
+                "type": "list",
+                "default_value": "[\"Cymodocea nodosa\", \"Halophila stipulacea\", \"Posidonia oceanica\", \"Zostera marina\", \"Zostera noltei\", \"Zostera marina and Cymodocea nodosa\", \"Zostera marina and Zostera noltei\"]"
+              }
+            ],
+            "secrets": [],
+            "title": "parameter-validator-koen-greuell-lifewatch-eu",
+            "description": "parameter-validator-koen-greuell-lifewatch-eu",
+            "created": "2025-11-18T10:56:35.540070Z",
+            "modified": "2025-11-18T10:56:56.613277Z",
+            "version": 2,
+            "container_image": "ghcr.io/naavre/cells-vl-openlab/parameter-validator-koen-greuell-lifewatch-eu:cf880d3",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-openlab/tree/8f83000cd4ca4eadd83a802ef240861ebff30578/parameter-validator-koen-greuell-lifewatch-eu",
+            "next_version": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/4b403610-b514-4837-aae2-16cbb28ab47f/"
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
+      }
+    },
+    "links": {
+      "f72bab3f-ce42-4b3f-980e-af029861050f": {
+        "id": "f72bab3f-ce42-4b3f-980e-af029861050f",
+        "from": {
+          "nodeId": "fb98b747-b1b4-4203-b425-e406db9693e8",
+          "portId": "seagrass_species"
+        },
+        "to": {
+          "nodeId": "1e4db24e-952c-4363-9175-84270ee579a8",
+          "portId": "seagrass_species"
+        }
+      }
+    },
+    "selected": {},
+    "hovered": {}
+  }
+}
