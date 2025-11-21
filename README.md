@@ -4,15 +4,16 @@
 
 _[Short explanation of the aim of the workflow]_
 
-### Running the workflow
-To run the workflow, do the following:
+### Running the workflow in NaaVRE
+To run the workflow, you need to open the virtual lab in NaaVRE. If you are not in NaaVRE, click the link to the virtual lab (https://beta.naavre.net/vreapp/vl/blue-carbon) and press "_Launch my instance_".  
+Once in NaaVRE, do the following:
 
 #### Prepare an access key on MinIO
 This virtual lab uses MinIO to upload the data that will be analyzed and store the results of the workflow. You can log into MinIO at https://scruffy.lab.uvalight.net:9001 using the same credentials as you're using to log into NaaVRE. In order to store and retrieve data from MinIO, you will need an access key. Create an access key [in MinIO](https://scruffy.lab.uvalight.net:9001/access-keys). Make sure to store the access key and secret key.
 
 > **_Upcoming Feature:_**  An upcoming feature in NaaVRE will make the generation of the MinIO secret unnecessary.
 
-#### Run the workflow in NaaVRE for the default geospatial location
+#### Run the workflow for the default geospatial location
 1) Open the workflow file: _[Add link to workflow file]()_.
 
 > **_Tip:_**  Optionally you can drag the window next to this readme window to view both at the same time.
@@ -38,7 +39,7 @@ Here you should see a results file from you workflow.
 
 You can download the file by doing right click, then press download.
 
-#### Run the workflow in NaaVRE for any European location and a seagrass species
+#### Run the workflow for any European location and a seagrass species
 You can run this carbon stock model for any European location for various seagrass species. 
 To do this, first copy the desired seagrass species option from the following list:
 
