@@ -1,8 +1,8 @@
 {
   "chart": {
     "offset": {
-      "x": -2043.09,
-      "y": 106.51
+      "x": -1661.09,
+      "y": 71.51
     },
     "scale": 0.572,
     "nodes": {
@@ -1114,150 +1114,6 @@
           "height": 61
         }
       },
-      "0e12e33c-2a27-4ebe-b47c-53c6768d8d2f": {
-        "id": "0e12e33c-2a27-4ebe-b47c-53c6768d8d2f",
-        "position": {
-          "x": 2219.970869584518,
-          "y": 649.458041958042
-        },
-        "orientation": 0,
-        "type": "workflow-cell",
-        "ports": {
-          "file_pH_mean": {
-            "id": "file_pH_mean",
-            "type": "left",
-            "properties": {
-              "color": "#9dbf40",
-              "parentNodeType": "workflow-cell"
-            },
-            "position": {
-              "x": -2,
-              "y": 30
-            }
-          },
-          "file_VHM0_p95": {
-            "id": "file_VHM0_p95",
-            "type": "right",
-            "properties": {
-              "color": "#c59287",
-              "parentNodeType": "workflow-cell"
-            },
-            "position": {
-              "x": 252,
-              "y": 30
-            }
-          }
-        },
-        "properties": {
-          "cell": {
-            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/1031d710-7e3a-4b31-b3c0-35d76196a521/",
-            "owner": "quan.pan@lifewatch.eu",
-            "virtual_lab": "blue-carbon",
-            "shared_with_scopes": [],
-            "shared_with_users": [],
-            "base_container_image": {
-              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
-              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
-            },
-            "dependencies": [
-              {
-                "name": "SecretsProvider",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "aws.s3",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "dplyr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "mgcv",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "RNetCDF",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "stringr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "tidyverse",
-                "module": "",
-                "asname": ""
-              }
-            ],
-            "inputs": [
-              {
-                "name": "file_pH_mean",
-                "type": "str"
-              }
-            ],
-            "outputs": [
-              {
-                "name": "file_VHM0_p95",
-                "type": "str"
-              }
-            ],
-            "confs": [
-              {
-                "name": "conf_file_wave_height_VHM0_p95_m",
-                "assignation": "conf_file_wave_height_VHM0_p95_m<-\"wave_height_p95_m.nc\""
-              },
-              {
-                "name": "conf_use_dummy_data",
-                "assignation": "conf_use_dummy_data<-1"
-              },
-              {
-                "name": "conf_minio_bucket_public_path",
-                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
-              },
-              {
-                "name": "conf_minio_bucket_user",
-                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
-              },
-              {
-                "name": "conf_minio_bucket_public",
-                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
-              },
-              {
-                "name": "conf_tmp_directory_data",
-                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
-              }
-            ],
-            "params": [
-              {
-                "name": "param_user_email",
-                "type": "str",
-                "default_value": "quan.pan@lifewatch.eu"
-              }
-            ],
-            "secrets": [],
-            "title": "vhm0-p95-quan-pan-lifewatch-eu",
-            "description": "vhm0-p95-quan-pan-lifewatch-eu",
-            "created": "2025-11-21T14:27:17.239066Z",
-            "modified": "2025-11-24T03:44:35.314124Z",
-            "version": 1,
-            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/vhm0-p95-quan-pan-lifewatch-eu:acbbbbc",
-            "kernel": "IRkernel",
-            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/d596bb51ac0d168acf6674fcc88b47af47485e7b/vhm0-p95-quan-pan-lifewatch-eu",
-            "next_version": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/260705a6-f653-4a2a-942e-90f04ebf151b/"
-          }
-        },
-        "size": {
-          "width": 252,
-          "height": 61
-        }
-      },
       "69b7166e-7575-422d-9181-62e2a90f4d03": {
         "id": "69b7166e-7575-422d-9181-62e2a90f4d03",
         "position": {
@@ -1415,8 +1271,8 @@
           }
         },
         "size": {
-          "width": 0,
-          "height": 0
+          "width": 252,
+          "height": 61
         }
       },
       "f3a8b4ef-e5c1-4178-8920-777bb1f527cc": {
@@ -1576,8 +1432,8 @@
           }
         },
         "size": {
-          "width": 0,
-          "height": 0
+          "width": 252,
+          "height": 61
         }
       },
       "54c0ffe9-28cc-4cd5-abd3-e261d0d7abe8": {
@@ -1868,328 +1724,6 @@
           }
         },
         "size": {
-          "width": 0,
-          "height": 0
-        }
-      },
-      "55fae2bb-f709-4a75-a8d8-f19353911810": {
-        "id": "55fae2bb-f709-4a75-a8d8-f19353911810",
-        "position": {
-          "x": 3795.1456947593424,
-          "y": 507.8496503496507
-        },
-        "orientation": 0,
-        "type": "workflow-cell",
-        "ports": {
-          "file_Seagrass_site_expanded": {
-            "id": "file_Seagrass_site_expanded",
-            "type": "left",
-            "properties": {
-              "color": "#a0ac53",
-              "parentNodeType": "workflow-cell"
-            },
-            "position": {
-              "x": -2,
-              "y": 30
-            }
-          },
-          "file_Carbon_Density": {
-            "id": "file_Carbon_Density",
-            "type": "right",
-            "properties": {
-              "color": "#ac8853",
-              "parentNodeType": "workflow-cell"
-            },
-            "position": {
-              "x": 252,
-              "y": 30
-            }
-          }
-        },
-        "properties": {
-          "cell": {
-            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/2764012f-d115-440f-ba2b-d31437acc446/",
-            "owner": "quan.pan@lifewatch.eu",
-            "virtual_lab": "blue-carbon",
-            "shared_with_scopes": [],
-            "shared_with_users": [],
-            "base_container_image": {
-              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
-              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
-            },
-            "dependencies": [
-              {
-                "name": "SecretsProvider",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "aws.s3",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "dplyr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "mgcv",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "RNetCDF",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "stringr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "tidyverse",
-                "module": "",
-                "asname": ""
-              }
-            ],
-            "inputs": [
-              {
-                "name": "file_Seagrass_site_expanded",
-                "type": "str"
-              }
-            ],
-            "outputs": [
-              {
-                "name": "file_Carbon_Density",
-                "type": "str"
-              }
-            ],
-            "confs": [
-              {
-                "name": "conf_file_For_modeling_df_shallow_carbon_density",
-                "assignation": "conf_file_For_modeling_df_shallow_carbon_density<-\"For_modeling_df_shallow_carbon_density.rds\""
-              },
-              {
-                "name": "conf_minio_region",
-                "assignation": "conf_minio_region<-\"nl-uvalight\""
-              },
-              {
-                "name": "conf_minio_bucket_user",
-                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
-              },
-              {
-                "name": "conf_minio_bucket_public",
-                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
-              },
-              {
-                "name": "conf_tmp_directory_data",
-                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
-              },
-              {
-                "name": "conf_minio_endpoint",
-                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
-              },
-              {
-                "name": "conf_use_dummy_data",
-                "assignation": "conf_use_dummy_data<-1"
-              },
-              {
-                "name": "conf_minio_bucket_public_path",
-                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
-              }
-            ],
-            "params": [
-              {
-                "name": "param_user_email",
-                "type": "str",
-                "default_value": "quan.pan@lifewatch.eu"
-              }
-            ],
-            "secrets": [
-              {
-                "name": "secret_minio_access_key",
-                "type": "str"
-              },
-              {
-                "name": "secret_minio_secret_key",
-                "type": "str"
-              }
-            ],
-            "title": "carbon-density-quan-pan-lifewatch-eu",
-            "description": "carbon-density-quan-pan-lifewatch-eu",
-            "created": "2025-11-24T03:48:45.706755Z",
-            "modified": "2025-11-24T03:48:46.114894Z",
-            "version": 3,
-            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/carbon-density-quan-pan-lifewatch-eu:948bfdb",
-            "kernel": "IRkernel",
-            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/020a41d0c0a581d004b78af6a6282751c5cc60f0/carbon-density-quan-pan-lifewatch-eu",
-            "next_version": null
-          }
-        },
-        "size": {
-          "width": 252,
-          "height": 61
-        }
-      },
-      "2ff8d21f-cfb7-4180-8c38-5cbead547ef2": {
-        "id": "2ff8d21f-cfb7-4180-8c38-5cbead547ef2",
-        "position": {
-          "x": 4148.292547906195,
-          "y": 509.5979020979022
-        },
-        "orientation": 0,
-        "type": "workflow-cell",
-        "ports": {
-          "file_Carbon_Density": {
-            "id": "file_Carbon_Density",
-            "type": "left",
-            "properties": {
-              "color": "#ac8853",
-              "parentNodeType": "workflow-cell"
-            },
-            "position": {
-              "x": -2,
-              "y": 30
-            }
-          },
-          "file_GAM": {
-            "id": "file_GAM",
-            "type": "right",
-            "properties": {
-              "color": "#539dac",
-              "parentNodeType": "workflow-cell"
-            },
-            "position": {
-              "x": 252,
-              "y": 30
-            }
-          }
-        },
-        "properties": {
-          "cell": {
-            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/9c6896ba-8e7f-499a-8a98-977148bd25d8/",
-            "owner": "quan.pan@lifewatch.eu",
-            "virtual_lab": "blue-carbon",
-            "shared_with_scopes": [],
-            "shared_with_users": [],
-            "base_container_image": {
-              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
-              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
-            },
-            "dependencies": [
-              {
-                "name": "SecretsProvider",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "aws.s3",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "dplyr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "mgcv",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "RNetCDF",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "stringr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "tidyverse",
-                "module": "",
-                "asname": ""
-              }
-            ],
-            "inputs": [
-              {
-                "name": "file_Carbon_Density",
-                "type": "str"
-              }
-            ],
-            "outputs": [
-              {
-                "name": "file_GAM",
-                "type": "str"
-              }
-            ],
-            "confs": [
-              {
-                "name": "conf_minio_endpoint",
-                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
-              },
-              {
-                "name": "conf_file_GAM_top_reduced_SGstock",
-                "assignation": "conf_file_GAM_top_reduced_SGstock<-\"GAM_top_reduced_model_SGstock.rds\""
-              },
-              {
-                "name": "conf_use_dummy_data",
-                "assignation": "conf_use_dummy_data<-1"
-              },
-              {
-                "name": "conf_minio_bucket_public_path",
-                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
-              },
-              {
-                "name": "conf_minio_bucket_user",
-                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
-              },
-              {
-                "name": "conf_minio_region",
-                "assignation": "conf_minio_region<-\"nl-uvalight\""
-              },
-              {
-                "name": "conf_minio_bucket_public",
-                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
-              },
-              {
-                "name": "conf_tmp_directory_data",
-                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
-              }
-            ],
-            "params": [
-              {
-                "name": "param_user_email",
-                "type": "str",
-                "default_value": "quan.pan@lifewatch.eu"
-              }
-            ],
-            "secrets": [
-              {
-                "name": "secret_minio_access_key",
-                "type": "str"
-              },
-              {
-                "name": "secret_minio_secret_key",
-                "type": "str"
-              }
-            ],
-            "title": "gam-top-reduced-sgstock-quan-pan-lifewatch-eu",
-            "description": "gam-top-reduced-sgstock-quan-pan-lifewatch-eu",
-            "created": "2025-11-24T03:50:29.145969Z",
-            "modified": "2025-11-24T03:50:29.550484Z",
-            "version": 4,
-            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/gam-top-reduced-sgstock-quan-pan-lifewatch-eu:3afc787",
-            "kernel": "IRkernel",
-            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/08e730cf6217b03d17fc42abcb4532f0b1740e12/gam-top-reduced-sgstock-quan-pan-lifewatch-eu",
-            "next_version": null
-          }
-        },
-        "size": {
           "width": 252,
           "height": 61
         }
@@ -2460,6 +1994,489 @@
           "width": 252,
           "height": 61
         }
+      },
+      "edde9d66-8f35-49e3-a9e6-dd8500545d89": {
+        "id": "edde9d66-8f35-49e3-a9e6-dd8500545d89",
+        "position": {
+          "x": 2214.259920987217,
+          "y": 670.4370629370633
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "file_pH_mean": {
+            "id": "file_pH_mean",
+            "type": "left",
+            "properties": {
+              "color": "#9dbf40",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": -2,
+              "y": 30
+            }
+          },
+          "file_VHM0_p95": {
+            "id": "file_VHM0_p95",
+            "type": "right",
+            "properties": {
+              "color": "#c59287",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": 252,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/260705a6-f653-4a2a-942e-90f04ebf151b/",
+            "owner": "quan.pan@lifewatch.eu",
+            "virtual_lab": "blue-carbon",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
+            },
+            "dependencies": [
+              {
+                "name": "SecretsProvider",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "aws.s3",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "dplyr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "mgcv",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "RNetCDF",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "stringr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "tidyverse",
+                "module": "",
+                "asname": ""
+              }
+            ],
+            "inputs": [
+              {
+                "name": "file_pH_mean",
+                "type": "str"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "file_VHM0_p95",
+                "type": "str"
+              }
+            ],
+            "confs": [
+              {
+                "name": "conf_minio_region",
+                "assignation": "conf_minio_region<-\"nl-uvalight\""
+              },
+              {
+                "name": "conf_minio_bucket_public",
+                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
+              },
+              {
+                "name": "conf_tmp_directory_data",
+                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
+              },
+              {
+                "name": "conf_minio_endpoint",
+                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
+              },
+              {
+                "name": "conf_file_wave_height_VHM0_p95_m",
+                "assignation": "conf_file_wave_height_VHM0_p95_m<-\"wave_height_p95_m.nc\""
+              },
+              {
+                "name": "conf_use_dummy_data",
+                "assignation": "conf_use_dummy_data<-1"
+              },
+              {
+                "name": "conf_minio_bucket_public_path",
+                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
+              },
+              {
+                "name": "conf_minio_bucket_user",
+                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
+              }
+            ],
+            "params": [
+              {
+                "name": "param_user_email",
+                "type": "str",
+                "default_value": "quan.pan@lifewatch.eu"
+              }
+            ],
+            "secrets": [
+              {
+                "name": "secret_minio_access_key",
+                "type": "str"
+              },
+              {
+                "name": "secret_minio_secret_key",
+                "type": "str"
+              }
+            ],
+            "title": "vhm0-p95-quan-pan-lifewatch-eu",
+            "description": "vhm0-p95-quan-pan-lifewatch-eu",
+            "created": "2025-11-24T03:44:33.693590Z",
+            "modified": "2025-11-24T03:44:34.185006Z",
+            "version": 2,
+            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/vhm0-p95-quan-pan-lifewatch-eu:d59cc3d",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/68404760eb2e41ab0493ab222c6c456fadac5387/vhm0-p95-quan-pan-lifewatch-eu",
+            "next_version": null
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
+      },
+      "ae4c9fd3-79e8-436b-a316-ba7866b91416": {
+        "id": "ae4c9fd3-79e8-436b-a316-ba7866b91416",
+        "position": {
+          "x": 3794.679501406797,
+          "y": 506.10139860139884
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "file_Seagrass_site_expanded": {
+            "id": "file_Seagrass_site_expanded",
+            "type": "left",
+            "properties": {
+              "color": "#a0ac53",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": -2,
+              "y": 30
+            }
+          },
+          "file_Carbon_Density": {
+            "id": "file_Carbon_Density",
+            "type": "right",
+            "properties": {
+              "color": "#ac8853",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": 252,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/3bb68193-f248-49d7-9292-b10b1354ad69/",
+            "owner": "quan.pan@lifewatch.eu",
+            "virtual_lab": "blue-carbon",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
+            },
+            "dependencies": [
+              {
+                "name": "dplyr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "mgcv",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "RNetCDF",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "stringr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "tidyverse",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "SecretsProvider",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "aws.s3",
+                "module": "",
+                "asname": ""
+              }
+            ],
+            "inputs": [
+              {
+                "name": "file_Seagrass_site_expanded",
+                "type": "str"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "file_Carbon_Density",
+                "type": "str"
+              }
+            ],
+            "confs": [
+              {
+                "name": "conf_minio_endpoint",
+                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
+              },
+              {
+                "name": "conf_use_dummy_data",
+                "assignation": "conf_use_dummy_data<-1"
+              },
+              {
+                "name": "conf_minio_bucket_public_path",
+                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
+              },
+              {
+                "name": "conf_file_For_modeling_df_shallow_carbon_density",
+                "assignation": "conf_file_For_modeling_df_shallow_carbon_density<-\"For_modeling_df_shallow_carbon_density.rds\""
+              },
+              {
+                "name": "conf_minio_region",
+                "assignation": "conf_minio_region<-\"nl-uvalight\""
+              },
+              {
+                "name": "conf_minio_bucket_user",
+                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
+              },
+              {
+                "name": "conf_minio_bucket_public",
+                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
+              },
+              {
+                "name": "conf_tmp_directory_data",
+                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
+              }
+            ],
+            "params": [
+              {
+                "name": "param_user_email",
+                "type": "str",
+                "default_value": "quan.pan@lifewatch.eu"
+              }
+            ],
+            "secrets": [
+              {
+                "name": "secret_minio_access_key",
+                "type": "str"
+              },
+              {
+                "name": "secret_minio_secret_key",
+                "type": "str"
+              }
+            ],
+            "title": "carbon-density-quan-pan-lifewatch-eu",
+            "description": "carbon-density-quan-pan-lifewatch-eu",
+            "created": "2025-11-24T04:34:32.332009Z",
+            "modified": "2025-11-24T04:34:32.807091Z",
+            "version": 4,
+            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/carbon-density-quan-pan-lifewatch-eu:134d9f0",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/19614afa388b6cdc2cb9ec09a57fd2ba985285bf/carbon-density-quan-pan-lifewatch-eu",
+            "next_version": null
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
+      },
+      "60a530b0-2be5-4592-acab-6af75df2a385": {
+        "id": "60a530b0-2be5-4592-acab-6af75df2a385",
+        "position": {
+          "x": 4156.567613294907,
+          "y": 427.4300699300702
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "file_Carbon_Density": {
+            "id": "file_Carbon_Density",
+            "type": "left",
+            "properties": {
+              "color": "#ac8853",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": -2,
+              "y": 30
+            }
+          },
+          "file_GAM": {
+            "id": "file_GAM",
+            "type": "right",
+            "properties": {
+              "color": "#539dac",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": 252,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/90ff22d4-5b8a-4938-8cad-74431575776e/",
+            "owner": "quan.pan@lifewatch.eu",
+            "virtual_lab": "blue-carbon",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
+            },
+            "dependencies": [
+              {
+                "name": "SecretsProvider",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "aws.s3",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "dplyr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "mgcv",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "RNetCDF",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "stringr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "tidyverse",
+                "module": "",
+                "asname": ""
+              }
+            ],
+            "inputs": [
+              {
+                "name": "file_Carbon_Density",
+                "type": "str"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "file_GAM",
+                "type": "str"
+              }
+            ],
+            "confs": [
+              {
+                "name": "conf_minio_bucket_public_path",
+                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
+              },
+              {
+                "name": "conf_minio_bucket_user",
+                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
+              },
+              {
+                "name": "conf_minio_region",
+                "assignation": "conf_minio_region<-\"nl-uvalight\""
+              },
+              {
+                "name": "conf_minio_bucket_public",
+                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
+              },
+              {
+                "name": "conf_tmp_directory_data",
+                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
+              },
+              {
+                "name": "conf_minio_endpoint",
+                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
+              },
+              {
+                "name": "conf_file_GAM_top_reduced_SGstock",
+                "assignation": "conf_file_GAM_top_reduced_SGstock<-\"GAM_top_reduced_model_SGstock.rds\""
+              },
+              {
+                "name": "conf_use_dummy_data",
+                "assignation": "conf_use_dummy_data<-1"
+              }
+            ],
+            "params": [
+              {
+                "name": "param_user_email",
+                "type": "str",
+                "default_value": "quan.pan@lifewatch.eu"
+              }
+            ],
+            "secrets": [
+              {
+                "name": "secret_minio_access_key",
+                "type": "str"
+              },
+              {
+                "name": "secret_minio_secret_key",
+                "type": "str"
+              }
+            ],
+            "title": "gam-top-reduced-sgstock-quan-pan-lifewatch-eu",
+            "description": "gam-top-reduced-sgstock-quan-pan-lifewatch-eu",
+            "created": "2025-11-24T04:35:12.941132Z",
+            "modified": "2025-11-24T04:35:13.353104Z",
+            "version": 5,
+            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/gam-top-reduced-sgstock-quan-pan-lifewatch-eu:e233d1e",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/ecd2d0b867a9232f73343f6bb7cfb128e023e08a/gam-top-reduced-sgstock-quan-pan-lifewatch-eu",
+            "next_version": null
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
       }
     },
     "links": {
@@ -2540,28 +2557,6 @@
           "portId": "file_Phospate_mean"
         }
       },
-      "b4a265d5-1892-4a02-9768-6cfb3f84c5bf": {
-        "id": "b4a265d5-1892-4a02-9768-6cfb3f84c5bf",
-        "from": {
-          "nodeId": "2210f379-2ed4-42af-ac56-0bd701379006",
-          "portId": "file_pH_mean"
-        },
-        "to": {
-          "nodeId": "0e12e33c-2a27-4ebe-b47c-53c6768d8d2f",
-          "portId": "file_pH_mean"
-        }
-      },
-      "2efb8420-f5e6-4b62-bdc7-74ce4925a963": {
-        "id": "2efb8420-f5e6-4b62-bdc7-74ce4925a963",
-        "from": {
-          "nodeId": "0e12e33c-2a27-4ebe-b47c-53c6768d8d2f",
-          "portId": "file_VHM0_p95"
-        },
-        "to": {
-          "nodeId": "69b7166e-7575-422d-9181-62e2a90f4d03",
-          "portId": "file_VHM0_p95"
-        }
-      },
       "9ae8e9b7-d81c-4e65-9256-628ad0ace114": {
         "id": "9ae8e9b7-d81c-4e65-9256-628ad0ace114",
         "from": {
@@ -2595,39 +2590,6 @@
           "portId": "file_RRS443"
         }
       },
-      "80458a22-2a66-4bca-b0c6-48fe1778e34d": {
-        "id": "80458a22-2a66-4bca-b0c6-48fe1778e34d",
-        "from": {
-          "nodeId": "1e210236-ded4-4142-8deb-add6c6cde27b",
-          "portId": "file_Seagrass_site_expanded"
-        },
-        "to": {
-          "nodeId": "55fae2bb-f709-4a75-a8d8-f19353911810",
-          "portId": "file_Seagrass_site_expanded"
-        }
-      },
-      "de7a90bf-2193-4063-b653-cb29eccf92c9": {
-        "id": "de7a90bf-2193-4063-b653-cb29eccf92c9",
-        "from": {
-          "nodeId": "55fae2bb-f709-4a75-a8d8-f19353911810",
-          "portId": "file_Carbon_Density"
-        },
-        "to": {
-          "nodeId": "2ff8d21f-cfb7-4180-8c38-5cbead547ef2",
-          "portId": "file_Carbon_Density"
-        }
-      },
-      "b27803b4-d74d-4e08-a376-95c4456b78a4": {
-        "id": "b27803b4-d74d-4e08-a376-95c4456b78a4",
-        "from": {
-          "nodeId": "2ff8d21f-cfb7-4180-8c38-5cbead547ef2",
-          "portId": "file_GAM"
-        },
-        "to": {
-          "nodeId": "6461cc64-964b-46e6-a3e0-b54a579d874b",
-          "portId": "file_GAM"
-        }
-      },
       "56364750-4896-4ece-a3fd-c8667dea88fe": {
         "id": "56364750-4896-4ece-a3fd-c8667dea88fe",
         "from": {
@@ -2638,12 +2600,64 @@
           "nodeId": "b687e7f5-2964-4776-bbb6-ed0b38a2b401",
           "portId": "file_GAM_30_100"
         }
+      },
+      "f502de0b-05a9-4d58-b701-284e2711c666": {
+        "id": "f502de0b-05a9-4d58-b701-284e2711c666",
+        "from": {
+          "nodeId": "2210f379-2ed4-42af-ac56-0bd701379006",
+          "portId": "file_pH_mean"
+        },
+        "to": {
+          "nodeId": "edde9d66-8f35-49e3-a9e6-dd8500545d89",
+          "portId": "file_pH_mean"
+        }
+      },
+      "7db53ee0-5cd1-4ff2-897e-300a6098173c": {
+        "id": "7db53ee0-5cd1-4ff2-897e-300a6098173c",
+        "from": {
+          "nodeId": "edde9d66-8f35-49e3-a9e6-dd8500545d89",
+          "portId": "file_VHM0_p95"
+        },
+        "to": {
+          "nodeId": "69b7166e-7575-422d-9181-62e2a90f4d03",
+          "portId": "file_VHM0_p95"
+        }
+      },
+      "88a27b22-3b7b-40e3-b115-c6acd2fcf994": {
+        "id": "88a27b22-3b7b-40e3-b115-c6acd2fcf994",
+        "from": {
+          "nodeId": "1e210236-ded4-4142-8deb-add6c6cde27b",
+          "portId": "file_Seagrass_site_expanded"
+        },
+        "to": {
+          "nodeId": "ae4c9fd3-79e8-436b-a316-ba7866b91416",
+          "portId": "file_Seagrass_site_expanded"
+        }
+      },
+      "390819bd-19b2-499b-b229-8d0305f28b0c": {
+        "id": "390819bd-19b2-499b-b229-8d0305f28b0c",
+        "from": {
+          "nodeId": "ae4c9fd3-79e8-436b-a316-ba7866b91416",
+          "portId": "file_Carbon_Density"
+        },
+        "to": {
+          "nodeId": "60a530b0-2be5-4592-acab-6af75df2a385",
+          "portId": "file_Carbon_Density"
+        }
+      },
+      "e2897b3b-2686-40be-bec4-7a068ce7e2c2": {
+        "id": "e2897b3b-2686-40be-bec4-7a068ce7e2c2",
+        "from": {
+          "nodeId": "60a530b0-2be5-4592-acab-6af75df2a385",
+          "portId": "file_GAM"
+        },
+        "to": {
+          "nodeId": "6461cc64-964b-46e6-a3e0-b54a579d874b",
+          "portId": "file_GAM"
+        }
       }
     },
     "selected": {},
-    "hovered": {
-      "type": "node",
-      "id": "6461cc64-964b-46e6-a3e0-b54a579d874b"
-    }
+    "hovered": {}
   }
 }
