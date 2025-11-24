@@ -9,7 +9,7 @@ _TO Add **Short explanation of the aim of the workflow**_
 The seagrass carbon stock model was developed to bring in relevant environmental data for modeling carbon stock as a function of environmental co-variates from remote sensing and Copernicus data products.
 
 To run the model, it contains two steps: 
-1. The first step extracts closest values of the matching sites.
+1. Extract closest values of the matching sites.
 2. Predicet carbon stock at the sites.
 
 ## Data preparation
