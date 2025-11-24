@@ -41,11 +41,15 @@ To run the model, it contains two steps:
 
 Example of 95th percentile of bottom temperature data
 
-![documentation/images/bottom temperature.png](documentation/images/Eample-Data_bottom.png)
+![Bottom Temperature](documentation/images/Eample-Data_bottom.png)
 
 ## Results
 
 ### Summary of carbon stock
+
+Example of carbon stock summary
+
+<div style="display: inline-block">
 
 ```
 For the seagrass bed at latitude 56.0953 and longitude 14.2785
@@ -55,8 +59,16 @@ The predicted carbon stock in the upper
   - upper 100cm of the sediment is 160.465 Mg/ha
 ```
 
+</div>
+
 ### CSV file
+
+Example of carbon stock table
+
+<div style="display: inline-block">
 
 | latitude | longitude | seagrass_species   | ... | carbon_stock_Mg_ha_upper30cm | carbon_stock_Mg_ha_upper100cm |
 | -------- | --------- | ------------------ | --- | ---------------------------- | ----------------------------- |
 | 56.0953  | 14.2785   | Posidonia oceanica | ... | 45.157343393228              | 160.46545898523               |
+
+</div>
