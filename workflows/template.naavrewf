@@ -1292,8 +1292,8 @@
               "parentNodeType": "workflow-cell"
             },
             "position": {
-              "x": -2,
-              "y": 30
+              "x": 0,
+              "y": 0
             }
           },
           "file_KD490": {
@@ -1304,8 +1304,8 @@
               "parentNodeType": "workflow-cell"
             },
             "position": {
-              "x": 252,
-              "y": 30
+              "x": 0,
+              "y": 0
             }
           }
         },
@@ -1432,8 +1432,8 @@
           }
         },
         "size": {
-          "width": 252,
-          "height": 61
+          "width": 0,
+          "height": 0
         }
       },
       "54c0ffe9-28cc-4cd5-abd3-e261d0d7abe8": {
@@ -2320,8 +2320,8 @@
       "60a530b0-2be5-4592-acab-6af75df2a385": {
         "id": "60a530b0-2be5-4592-acab-6af75df2a385",
         "position": {
-          "x": 4156.567613294907,
-          "y": 427.4300699300702
+          "x": 4154.819361546658,
+          "y": 504.35314685314705
         },
         "orientation": 0,
         "type": "workflow-cell",
