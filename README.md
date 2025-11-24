@@ -2,6 +2,9 @@
 
 ![documentation/images/workflow_flowchart.png](documentation/images/workflow_flowchart.png)
 
+**Author** Natalya D. Gallo
+**Reference**
+
 _TO Add **Short explanation of the aim of the workflow**_
 
 ## Introduction
@@ -10,11 +13,11 @@ The seagrass carbon stock model was developed to bring in relevant environmental
 
 To run the model, it contains two steps: 
 1. Extract closest values of the matching sites.
-2. Predicet carbon stock at the sites.
+2. Predicet carbon stock in the upper 30 and 100 cm of a seagrass bed at the sites.
 
 ## Data preparation
 
-### The seagrass species in Europ.
+### The European seagrasses.
 
 * Cymodocea nodosa  
 * Halophila stipulacea  
@@ -39,3 +42,21 @@ To run the model, it contains two steps:
 Example of 95th percentile of bottom temperature data
 
 ![documentation/images/bottom temperature.png](documentation/images/Eample-Data_bottom.png)
+
+## Results
+
+### Summary of carbon stock
+
+```
+For the seagrass bed at latitude 56.0953 and longitude 14.2785
+The species identity Posidonia oceanica
+The predicted carbon stock in the upper 
+  - upper 30cm  of the sediment is 45.157 Mg/ha
+  - upper 100cm of the sediment is 160.465 Mg/ha
+```
+
+### CSV file
+
+| latitude | longitude | seagrass_species   | ... | carbon_stock_Mg_ha_upper30cm | carbon_stock_Mg_ha_upper100cm |
+| -------- | --------- | ------------------ | --- | ---------------------------- | ----------------------------- |
+| 56.0953  | 14.2785   | Posidonia oceanica | ... | 45.157343393228              | 160.46545898523               |
