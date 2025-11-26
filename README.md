@@ -41,7 +41,7 @@ To run the model, it contains two steps:
 
 Example of 95th percentile of bottom temperature data
 
-![Bottom Temperature](documentation/images/Eample-Data_bottom.png)
+![Bottom Temperature](documentation/images/example-Data_bottom.png)
 
 ## Results
 
