@@ -1,0 +1,381 @@
+{
+  "chart": {
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "scale": 1,
+    "nodes": {
+      "39468393-0958-4f22-a206-f57e8ad7be2f": {
+        "id": "39468393-0958-4f22-a206-f57e8ad7be2f",
+        "position": {
+          "x": 477,
+          "y": 314
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "file_Seagrass_site_expanded": {
+            "id": "file_Seagrass_site_expanded",
+            "type": "right",
+            "properties": {
+              "color": "#a0ac53",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": 252,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/93360319-187d-46fb-a51f-44d2cfa9612b/",
+            "owner": "quan.pan@lifewatch.eu",
+            "virtual_lab": "blue-carbon",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
+            },
+            "dependencies": [
+              {
+                "name": "SecretsProvider",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "aws.s3",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "dplyr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "mgcv",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "RNetCDF",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "stringr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "tidyverse",
+                "module": "",
+                "asname": ""
+              }
+            ],
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "file_Seagrass_site_expanded",
+                "type": "str"
+              }
+            ],
+            "confs": [
+              {
+                "name": "conf_tmp_file_SG_modeling_dataframe",
+                "assignation": "conf_tmp_file_SG_modeling_dataframe<-\"SG_modeling_dataframe.csv\""
+              },
+              {
+                "name": "conf_use_dummy_data",
+                "assignation": "conf_use_dummy_data<-1"
+              },
+              {
+                "name": "conf_minio_endpoint",
+                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
+              },
+              {
+                "name": "conf_file_wave_height_VHM0_p95_m",
+                "assignation": "conf_file_wave_height_VHM0_p95_m<-\"wave_height_p95_m.nc\""
+              },
+              {
+                "name": "conf_file_po4_mean_1.5m_mmol_m3",
+                "assignation": "conf_file_po4_mean_1.5m_mmol_m3<-\"po4_mean_monthly_1.5m_mmol_m3.nc\""
+              },
+              {
+                "name": "conf_minio_region",
+                "assignation": "conf_minio_region<-\"nl-uvalight\""
+              },
+              {
+                "name": "conf_file_RRS443",
+                "assignation": "conf_file_RRS443<-\"S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.RRS.Rrs_443.4km.nc\""
+              },
+              {
+                "name": "conf_file_Surf_fgco2_p95_molC_m2_yr",
+                "assignation": "conf_file_Surf_fgco2_p95_molC_m2_yr<-\"Surf_fgco2_p95_molC_m2_yr.nc\""
+              },
+              {
+                "name": "conf_minio_bucket_user",
+                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
+              },
+              {
+                "name": "conf_tmp_file_result",
+                "assignation": "conf_tmp_file_result<-\"tmp_result.rds\""
+              },
+              {
+                "name": "conf_file_uo_mean_1.5m_m_s",
+                "assignation": "conf_file_uo_mean_1.5m_m_s<-\"uo_mean_1.5m_m_s.nc\""
+              },
+              {
+                "name": "conf_file_vo_p90_1.5m_m_s",
+                "assignation": "conf_file_vo_p90_1.5m_m_s<-\"vo_p90_1.5m_m_s.nc\""
+              },
+              {
+                "name": "conf_minio_bucket_public",
+                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
+              },
+              {
+                "name": "conf_tmp_directory_data",
+                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
+              },
+              {
+                "name": "conf_file_KD",
+                "assignation": "conf_file_KD<-\"S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.KD.Kd_490.4km.nc\""
+              },
+              {
+                "name": "conf_minio_bucket_public_path",
+                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
+              },
+              {
+                "name": "conf_file_bottomT_p95",
+                "assignation": "conf_file_bottomT_p95<-\"bottomT_p95_daily_C.nc\""
+              },
+              {
+                "name": "conf_file_pH_mean_1.5m",
+                "assignation": "conf_file_pH_mean_1.5m<-\"pH_mean_monthly_1.5m.nc\""
+              }
+            ],
+            "params": [
+              {
+                "name": "param_latitude",
+                "type": "float",
+                "default_value": "56.0953"
+              },
+              {
+                "name": "param_longitude",
+                "type": "float",
+                "default_value": "14.2785"
+              },
+              {
+                "name": "param_seagrass_species",
+                "type": "str",
+                "default_value": "Posidonia oceanica"
+              },
+              {
+                "name": "param_user_email",
+                "type": "str",
+                "default_value": "[the e-mail address you used to log into NaaVRE]"
+              }
+            ],
+            "secrets": [
+              {
+                "name": "secret_minio_access_key",
+                "type": "str"
+              },
+              {
+                "name": "secret_minio_secret_key",
+                "type": "str"
+              }
+            ],
+            "title": "input-from-gui-quan-pan-lifewatch-eu",
+            "description": "input-from-gui-quan-pan-lifewatch-eu",
+            "created": "2025-11-28T09:35:38.241866Z",
+            "modified": "2025-11-28T09:35:38.764387Z",
+            "version": 1,
+            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/input-from-gui-quan-pan-lifewatch-eu:e9a5e59",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/0c77878a2ab72e569c398384092b4e1d9369defe/input-from-gui-quan-pan-lifewatch-eu",
+            "next_version": null
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
+      },
+      "1c5d8b47-29ef-4ead-9965-80a401d3f048": {
+        "id": "1c5d8b47-29ef-4ead-9965-80a401d3f048",
+        "position": {
+          "x": 849,
+          "y": 315
+        },
+        "orientation": 0,
+        "type": "workflow-cell",
+        "ports": {
+          "file_Seagrass_site_expanded": {
+            "id": "file_Seagrass_site_expanded",
+            "type": "left",
+            "properties": {
+              "color": "#a0ac53",
+              "parentNodeType": "workflow-cell"
+            },
+            "position": {
+              "x": -2,
+              "y": 30
+            }
+          }
+        },
+        "properties": {
+          "cell": {
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/344bb34c-ec06-49cf-a9b5-b9a88e752692/",
+            "owner": "quan.pan@lifewatch.eu",
+            "virtual_lab": "blue-carbon",
+            "shared_with_scopes": [],
+            "shared_with_users": [],
+            "base_container_image": {
+              "build": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-build:v0.0.38",
+              "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
+            },
+            "dependencies": [
+              {
+                "name": "RNetCDF",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "stringr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "tidyverse",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "SecretsProvider",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "aws.s3",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "dplyr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "mgcv",
+                "module": "",
+                "asname": ""
+              }
+            ],
+            "inputs": [
+              {
+                "name": "file_Seagrass_site_expanded",
+                "type": "str"
+              }
+            ],
+            "outputs": [],
+            "confs": [
+              {
+                "name": "conf_minio_endpoint",
+                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
+              },
+              {
+                "name": "conf_file_result_txt",
+                "assignation": "conf_file_result_txt<-\"Seagrass_site_result.txt\""
+              },
+              {
+                "name": "conf_file_GAM_top_reduced_SGstock",
+                "assignation": "conf_file_GAM_top_reduced_SGstock<-\"GAM_top_reduced_model_SGstock.rds\""
+              },
+              {
+                "name": "conf_use_dummy_data",
+                "assignation": "conf_use_dummy_data<-1"
+              },
+              {
+                "name": "conf_minio_bucket_public_path",
+                "assignation": "conf_minio_bucket_public_path<-\"vl-bluecarbon\""
+              },
+              {
+                "name": "conf_file_result_csv",
+                "assignation": "conf_file_result_csv<-\"Seagrass_site_result.csv\""
+              },
+              {
+                "name": "conf_file_For_modeling_df_shallow_carbon_density",
+                "assignation": "conf_file_For_modeling_df_shallow_carbon_density<-\"For_modeling_df_shallow_carbon_density.rds\""
+              },
+              {
+                "name": "conf_minio_region",
+                "assignation": "conf_minio_region<-\"nl-uvalight\""
+              },
+              {
+                "name": "conf_minio_bucket_user",
+                "assignation": "conf_minio_bucket_user<-\"naa-vre-user-data\""
+              },
+              {
+                "name": "conf_minio_bucket_public",
+                "assignation": "conf_minio_bucket_public<-\"naa-vre-public\""
+              },
+              {
+                "name": "conf_tmp_directory_data",
+                "assignation": "conf_tmp_directory_data<-\"/tmp/data\""
+              }
+            ],
+            "params": [
+              {
+                "name": "param_user_email",
+                "type": "str",
+                "default_value": "[the e-mail address you used to log into NaaVRE]"
+              }
+            ],
+            "secrets": [
+              {
+                "name": "secret_minio_access_key",
+                "type": "str"
+              },
+              {
+                "name": "secret_minio_secret_key",
+                "type": "str"
+              }
+            ],
+            "title": "carbon-stock-model-quan-pan-lifewatch-eu",
+            "description": "carbon-stock-model-quan-pan-lifewatch-eu",
+            "created": "2025-11-28T09:35:45.766228Z",
+            "modified": "2025-11-28T09:35:46.202123Z",
+            "version": 1,
+            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/carbon-stock-model-quan-pan-lifewatch-eu:b0f5d3e",
+            "kernel": "IRkernel",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/0dece77230e998d3e2b05d1a20072d8981651a98/carbon-stock-model-quan-pan-lifewatch-eu",
+            "next_version": null
+          }
+        },
+        "size": {
+          "width": 252,
+          "height": 61
+        }
+      }
+    },
+    "links": {
+      "de5b5d1e-ca45-411e-a416-a5a2d7cf1cf7": {
+        "id": "de5b5d1e-ca45-411e-a416-a5a2d7cf1cf7",
+        "from": {
+          "nodeId": "39468393-0958-4f22-a206-f57e8ad7be2f",
+          "portId": "file_Seagrass_site_expanded"
+        },
+        "to": {
+          "nodeId": "1c5d8b47-29ef-4ead-9965-80a401d3f048",
+          "portId": "file_Seagrass_site_expanded"
+        }
+      }
+    },
+    "selected": {},
+    "hovered": {}
+  }
+}
