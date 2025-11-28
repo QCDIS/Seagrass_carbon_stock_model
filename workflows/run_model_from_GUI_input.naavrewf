@@ -6,11 +6,11 @@
     },
     "scale": 1,
     "nodes": {
-      "39468393-0958-4f22-a206-f57e8ad7be2f": {
-        "id": "39468393-0958-4f22-a206-f57e8ad7be2f",
+      "388cc9f5-6e98-48e5-a945-a921d3e71e6d": {
+        "id": "388cc9f5-6e98-48e5-a945-a921d3e71e6d",
         "position": {
-          "x": 477,
-          "y": 314
+          "x": 398,
+          "y": 336
         },
         "orientation": 0,
         "type": "workflow-cell",
@@ -30,7 +30,7 @@
         },
         "properties": {
           "cell": {
-            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/93360319-187d-46fb-a51f-44d2cfa9612b/",
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/8e375324-a10b-4ded-9fd6-fc4b3925b00f/",
             "owner": "quan.pan@lifewatch.eu",
             "virtual_lab": "blue-carbon",
             "shared_with_scopes": [],
@@ -84,18 +84,6 @@
               }
             ],
             "confs": [
-              {
-                "name": "conf_tmp_file_SG_modeling_dataframe",
-                "assignation": "conf_tmp_file_SG_modeling_dataframe<-\"SG_modeling_dataframe.csv\""
-              },
-              {
-                "name": "conf_use_dummy_data",
-                "assignation": "conf_use_dummy_data<-1"
-              },
-              {
-                "name": "conf_minio_endpoint",
-                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
-              },
               {
                 "name": "conf_file_wave_height_VHM0_p95_m",
                 "assignation": "conf_file_wave_height_VHM0_p95_m<-\"wave_height_p95_m.nc\""
@@ -155,6 +143,18 @@
               {
                 "name": "conf_file_pH_mean_1.5m",
                 "assignation": "conf_file_pH_mean_1.5m<-\"pH_mean_monthly_1.5m.nc\""
+              },
+              {
+                "name": "conf_tmp_file_SG_modeling_dataframe",
+                "assignation": "conf_tmp_file_SG_modeling_dataframe<-\"SG_modeling_dataframe.csv\""
+              },
+              {
+                "name": "conf_use_dummy_data",
+                "assignation": "conf_use_dummy_data<-1"
+              },
+              {
+                "name": "conf_minio_endpoint",
+                "assignation": "conf_minio_endpoint<-\"scruffy.lab.uvalight.net:9000\""
               }
             ],
             "params": [
@@ -191,12 +191,12 @@
             ],
             "title": "input-from-gui-quan-pan-lifewatch-eu",
             "description": "input-from-gui-quan-pan-lifewatch-eu",
-            "created": "2025-11-28T09:35:38.241866Z",
-            "modified": "2025-11-28T09:35:38.764387Z",
-            "version": 1,
+            "created": "2025-11-28T09:59:07.914409Z",
+            "modified": "2025-11-28T09:59:08.451894Z",
+            "version": 2,
             "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/input-from-gui-quan-pan-lifewatch-eu:e9a5e59",
             "kernel": "IRkernel",
-            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/0c77878a2ab72e569c398384092b4e1d9369defe/input-from-gui-quan-pan-lifewatch-eu",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/b633b8948eda497265a413eddf4b0ba38137ce38/input-from-gui-quan-pan-lifewatch-eu",
             "next_version": null
           }
         },
@@ -205,11 +205,11 @@
           "height": 61
         }
       },
-      "1c5d8b47-29ef-4ead-9965-80a401d3f048": {
-        "id": "1c5d8b47-29ef-4ead-9965-80a401d3f048",
+      "04f28c6d-9632-4a6d-9a7f-d0dc2e927921": {
+        "id": "04f28c6d-9632-4a6d-9a7f-d0dc2e927921",
         "position": {
-          "x": 849,
-          "y": 315
+          "x": 752,
+          "y": 339
         },
         "orientation": 0,
         "type": "workflow-cell",
@@ -229,7 +229,7 @@
         },
         "properties": {
           "cell": {
-            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/344bb34c-ec06-49cf-a9b5-b9a88e752692/",
+            "url": "https://beta.naavre.net/naavre-catalogue-service/workflow-cells/65cc4284-4320-46fc-8831-04f9fe4b5770/",
             "owner": "quan.pan@lifewatch.eu",
             "virtual_lab": "blue-carbon",
             "shared_with_scopes": [],
@@ -239,21 +239,6 @@
               "runtime": "ghcr.io/naavre/flavors/naavre-fl-blue-carbon-cell-runtime:v0.0.38"
             },
             "dependencies": [
-              {
-                "name": "RNetCDF",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "stringr",
-                "module": "",
-                "asname": ""
-              },
-              {
-                "name": "tidyverse",
-                "module": "",
-                "asname": ""
-              },
               {
                 "name": "SecretsProvider",
                 "module": "",
@@ -271,6 +256,21 @@
               },
               {
                 "name": "mgcv",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "RNetCDF",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "stringr",
+                "module": "",
+                "asname": ""
+              },
+              {
+                "name": "tidyverse",
                 "module": "",
                 "asname": ""
               }
@@ -347,12 +347,12 @@
             ],
             "title": "carbon-stock-model-quan-pan-lifewatch-eu",
             "description": "carbon-stock-model-quan-pan-lifewatch-eu",
-            "created": "2025-11-28T09:35:45.766228Z",
-            "modified": "2025-11-28T09:35:46.202123Z",
-            "version": 1,
-            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/carbon-stock-model-quan-pan-lifewatch-eu:b0f5d3e",
+            "created": "2025-11-28T10:32:13.813865Z",
+            "modified": "2025-11-28T10:32:15.105790Z",
+            "version": 2,
+            "container_image": "ghcr.io/naavre/cells-vl-blue-carbon/carbon-stock-model-quan-pan-lifewatch-eu:b973139",
             "kernel": "IRkernel",
-            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/0dece77230e998d3e2b05d1a20072d8981651a98/carbon-stock-model-quan-pan-lifewatch-eu",
+            "source_url": "https://github.com/NaaVRE/cells-vl-blue-carbon/tree/334f3b1b98d21c545b783b8b86d6f1cda2ccea3d/carbon-stock-model-quan-pan-lifewatch-eu",
             "next_version": null
           }
         },
@@ -363,14 +363,14 @@
       }
     },
     "links": {
-      "de5b5d1e-ca45-411e-a416-a5a2d7cf1cf7": {
-        "id": "de5b5d1e-ca45-411e-a416-a5a2d7cf1cf7",
+      "df18eb4e-deb5-4e76-a590-4601b06baead": {
+        "id": "df18eb4e-deb5-4e76-a590-4601b06baead",
         "from": {
-          "nodeId": "39468393-0958-4f22-a206-f57e8ad7be2f",
+          "nodeId": "388cc9f5-6e98-48e5-a945-a921d3e71e6d",
           "portId": "file_Seagrass_site_expanded"
         },
         "to": {
-          "nodeId": "1c5d8b47-29ef-4ead-9965-80a401d3f048",
+          "nodeId": "04f28c6d-9632-4a6d-9a7f-d0dc2e927921",
           "portId": "file_Seagrass_site_expanded"
         }
       }
