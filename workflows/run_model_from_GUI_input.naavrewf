@@ -315,9 +315,6 @@
       }
     },
     "selected": {},
-    "hovered": {
-      "type": "node",
-      "id": "ac80958f-8d3d-45cf-a8bc-d8096e119739"
-    }
+    "hovered": {}
   }
 }
