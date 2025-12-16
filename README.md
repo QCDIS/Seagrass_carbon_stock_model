@@ -1,9 +1,5 @@
 # Spatial mapping of blue carbon benefits
 
-**Question**:
-* Which **environmental variables** have the most robust statistical relationships with carbon storage in seagrass beds?
-* How well can this combination of environmental variables **predict seagrass carbon storage** for the European region?
-
 <div style="display: inline-block">
 
 |    |    |    |
@@ -14,9 +10,37 @@
 
 </div>
 
-## Introduction
+**Question**:
+* Which **environmental variables** have the most robust statistical relationships with carbon storage in seagrass beds?
+* How well can this combination of environmental variables **predict seagrass carbon storage** for the European region?
 
-### What is Blue Carbon?
+<!-- vscode-markdown-toc -->
+- [Introduction](#introduction)
+  - [What is Blue Carbon?](#what-is-blue-carbon)
+  - [A focus on seagrass ecosystems](#a-focus-on-seagrass-ecosystems)
+- [Methods](#methods)
+- [Results](#results)
+  - [What variables affect carbon storage in seagrass beds?](#what-variables-affect-carbon-storage-in-seagrass-beds)
+  - [What data products to use?](#what-data-products-to-use)
+    - [Remote sensing](#remote-sensing)
+    - [EURO-CARBON Database](#euro-carbon-database)
+- [Seagrass Carbon Stock Model](#seagrass-carbon-stock-model)
+  - [Model input](#model-input)
+    - [The list of European seagrasses.](#the-list-of-european-seagrasses)
+    - [Remote sensing products](#remote-sensing-products)
+  - [Model output](#model-output)
+    - [Summary of carbon stock](#summary-of-carbon-stock)
+    - [CSV file](#csv-file)
+
+<!-- vscode-markdown-toc-config
+	numbering=false
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+## <a name='Introduction'></a>Introduction
+
+### <a name='WhatisBlueCarbon'></a>What is Blue Carbon?
 
 The term “blue carbon” was defined as the carbon captured and stored by coastal and marine ecosystems dominated by rooted vegetation.
 
@@ -24,7 +48,7 @@ Over time, the definition of blue carbon has evolved.
 The Intergovernmental Panel on Climate Change (IPCC), in its Sixth Assessment Report (AR6), defines blue carbon more broadly as 
 “**biologically driven carbon fluxes and storage in marine systems that are amenable to management**” ([IPCC, 2022](https://doi.org/10.1017/9781009325844.029)). 
 
-### A focus on seagrass ecosystems
+### <a name='Afocusonseagrassecosystems'></a>A focus on seagrass ecosystems
 
 Mangroves, seagrass meadows, and salt marshes are vegetated coastal habitats recognized for their remarkable ability to 
 sequester and store atmospheric carbon dioxide (CO₂) in both their biomass and underlying sediments. 
@@ -47,7 +71,7 @@ and they are more relevant for the European context.
 
 ![img_readme_01-Map_of_seagrass_meadows_in_Europe.png](documentation/images/img_readme_01-Map_of_seagrass_meadows_in_Europe.png "Map of seagrass meadows in Europe")
 
-## Methods
+## <a name='Methods'></a>Methods
 
 Five key activities were undertaken:
 * **A1** Literature review
@@ -58,9 +82,9 @@ Five key activities were undertaken:
 
 ![img_readme_02-Five_components_task5_3.png](documentation/images/img_readme_02-Five_components_task5_3.png "An overview of the five components that were undertaken as part of Task 5.3")
 
-## Results
+## <a name='Results'></a>Results
 
-### What variables affect carbon storage in seagrass beds?
+### <a name='Whatvariablesaffectcarbonstorageinseagrassbeds'></a>What variables affect carbon storage in seagrass beds?
 
 Seagrass ecosystems store organic carbon in both aboveground and belowground components. 
 * **Aboveground** biomass includes living and dead plant material such as leaves
@@ -81,9 +105,9 @@ An overview of key abiotic and biotic factors is provided below.
 
 </div>
 
-### What data products to use?
+### <a name='Whatdataproductstouse'></a>What data products to use?
 
-#### Remote sensing
+#### <a name='Remotesensing'></a>Remote sensing
 
 Seagrass carbon storage is typically measured through field sampling of sediment cores,
 which provides accurate data but is costly, time-consuming, and destructive. 
@@ -91,7 +115,7 @@ Increasing access to open-source satellite imagery (e.g., Sentinel-2 and Landsat
 and advances in cloud computing and machine learning ([Traganos et al., 2022](https://doi.org/10.3389/fmars.2022.871799))
 now offer promising tools for assessing blue carbon stocks remotely.
 
-#### EURO-CARBON Database
+#### <a name='EURO-CARBONDatabase'></a>EURO-CARBON Database
 
 The EURO-CARBON database v1 ([Graversen et al., 2025](https://doi.org/10.1016/j.dib.2025.111595), [Lønborg et al. 2025](https://doi.org/10.5281/zenodo.14905489)) includes a total of 61,306 data entries for organic carbon content. 
 The EURO-CARBON v1 database contains 4,233 sediment carbon datapoints from seagrass meadows collected between 1997-2023 in the European region.
@@ -99,13 +123,17 @@ The EURO-CARBON v1 database contains 4,233 sediment carbon datapoints from seagr
 ![img_readme_03-Satellite_and_EURO-CARBON.png](documentation/images/img_readme_03-Satellite_and_EURO-CARBON.png "Satellite-derived composite particulate backscatter at 443 nm (PBS443) from
 Sentinel-3, overlaid with EURO-CARBON seagrass carbon measurement sites")
 
-## Seagrass Carbon Stock Model
+## <a name='SeagrassCarbonStockModel'></a>Seagrass Carbon Stock Model
 
-### Workflow on Vritual Research Environment (VRE)
+We developed a multi-model approach combining machine learning 
+(Gaussian Process Regression, Decision Tree, Neural Network)
+and statistical methods (Random Forest, Generalised Additive Model).
 
-### Model input
+![img_readme_05-Overview_of_seagrass_carbon_stock_model.png](documentation/images/img_readme_05-Overview_of_seagrass_carbon_stock_model.png "Overview of Seagrass Carbon Stock Model Development on VRE")
 
-#### The European seagrasses.
+### <a name='Modelinput'></a>Model input
+
+#### <a name='ThelistofEuropeanseagrasses.'></a>The list of European seagrasses.
 
 * Cymodocea nodosa  
 * Halophila stipulacea  
@@ -115,14 +143,13 @@ Sentinel-3, overlaid with EURO-CARBON seagrass carbon measurement sites")
 * Zostera marina and Cymodocea nodosa  
 * Zostera marina and Zostera noltei  
 
-#### Remote sensing products
+#### <a name='Remotesensingproducts'></a>Remote sensing products
 
-![img_readme_04-Datasets.png](documentation/images/img_readme_04-Datasets.png "Overview of the Copernicus data products downloaded and used in the modelling
-analysis")
+![img_readme_04-Datasets.png](documentation/images/img_readme_04-Datasets.png "Overview of the Copernicus data products downloaded and used in the modelling analysis")
 
-### Model output
+### <a name='Modeloutput'></a>Model output
 
-#### Summary of carbon stock
+#### <a name='Summaryofcarbonstock'></a>Summary of carbon stock
 
 Example of carbon stock summary
 
@@ -138,7 +165,7 @@ The predicted carbon stock in the upper
 
 </div>
 
-#### CSV file
+#### <a name='CSVfile'></a>CSV file
 
 Example of carbon stock table
 
