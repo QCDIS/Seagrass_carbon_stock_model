@@ -10,9 +10,12 @@
 
 </div>
 
-**Question**:
+**Question**
+
 * Which **environmental variables** have the most robust statistical relationships with carbon storage in seagrass beds?
 * How well can this combination of environmental variables **predict seagrass carbon storage** for the European region?
+
+**TOC**
 
 <!-- vscode-markdown-toc -->
 - [Introduction](#introduction)
