@@ -4,9 +4,10 @@
 
 |    |    |    |
 | -- | -- | -- |
-| Author    | Natalya D. Gallo       | [Norwegian Research Center AS (NORCE)](https://www.norceresearch.no/en/) |
+| Author    | Natalya D. Gallo       | [Norwegian Research Center (NORCE)](https://www.norceresearch.no/en/) |
 | Developer | Quan Pan, Koen Greuell | [LifeWatch ERIC](https://www.lifewatch.eu/) |
 | Reference | Deliverable 5.3        | [MARCO-BOLO Project](https://marcobolo-project.eu/) |
+| Resource  | MOD Alliance Webinar   | [#5 explores mapping blue carbon in European seagrass beds](https://marcobolo-project.eu/mod-alliance-webinar-5-explores-mapping-blue-carbon-in-european-seagrass-beds/) \| [video](https://youtu.be/_wtJcVR59MQ?si=vm8tbuVjlwk16_EB) |
 
 </div>
 
