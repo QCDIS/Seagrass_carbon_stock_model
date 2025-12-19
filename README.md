@@ -4,10 +4,11 @@
 
 |    |    |    |
 | -- | -- | -- |
-| Author    | Natalya D. Gallo       | [Norwegian Research Center (NORCE)](https://www.norceresearch.no/en/) |
-| Developer | Quan Pan, Koen Greuell | [LifeWatch ERIC](https://www.lifewatch.eu/) |
-| Reference | Deliverable 5.3        | [MARCO-BOLO Project](https://marcobolo-project.eu/) |
-| Resource  | MOD Alliance Webinar   | [#5 explores mapping blue carbon in European seagrass beds](https://marcobolo-project.eu/mod-alliance-webinar-5-explores-mapping-blue-carbon-in-european-seagrass-beds/) \| [video](https://youtu.be/_wtJcVR59MQ?si=vm8tbuVjlwk16_EB) |
+| Model Developer | Natalya D. Gallo                       | [Norwegian Research Center (NORCE)](https://www.norceresearch.no/en/) |
+| VLab  Developer | Quan Pan, Koen Greuell                 | [LifeWatch ERIC](https://www.lifewatch.eu/) |
+| Reference       | Deliverable 5.3                        | [WP5 -> D5.3](https://marcobolo-project.eu/deliverables/) |
+| Resource        | MOD Alliance Webinar                   | [#5 explores mapping blue carbon in European seagrass beds](https://marcobolo-project.eu/mod-alliance-webinar-5-explores-mapping-blue-carbon-in-european-seagrass-beds/) \| [video](https://youtu.be/_wtJcVR59MQ?si=vm8tbuVjlwk16_EB) |
+| Tutorial        | How to run Seagrass Carbon Stock Model | [Tutorial.md](Tutorial.md) |
 
 </div>
 
@@ -15,32 +16,6 @@
 
 * Which **environmental variables** have the most robust statistical relationships with carbon storage in seagrass beds?
 * How well can this combination of environmental variables **predict seagrass carbon storage** for the European region?
-
-**TOC**
-
-<!-- vscode-markdown-toc -->
-- [Introduction](#introduction)
-  - [What is Blue Carbon?](#what-is-blue-carbon)
-  - [A focus on seagrass ecosystems](#a-focus-on-seagrass-ecosystems)
-- [Methods](#methods)
-- [Results](#results)
-  - [What variables affect carbon storage in seagrass beds?](#what-variables-affect-carbon-storage-in-seagrass-beds)
-  - [What data products to use?](#what-data-products-to-use)
-    - [Remote sensing](#remote-sensing)
-    - [EURO-CARBON Database](#euro-carbon-database)
-- [Seagrass Carbon Stock Model](#seagrass-carbon-stock-model)
-  - [Model input](#model-input)
-    - [The list of European seagrasses.](#the-list-of-european-seagrasses)
-    - [Remote sensing products](#remote-sensing-products)
-  - [Model output](#model-output)
-    - [Summary of carbon stock](#summary-of-carbon-stock)
-    - [CSV file](#csv-file)
-
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
 
 ## <a name='Introduction'></a>Introduction
 
@@ -169,7 +144,7 @@ The predicted carbon stock in the upper
 
 </div>
 
-#### <a name='CSVfile'></a>CSV file
+#### <a name='CSVfile'></a>Predicted carbon stock table
 
 Example of carbon stock table
 
