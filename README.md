@@ -9,6 +9,7 @@
 | Reference       | Deliverable 5.3                        | [WP5 -> D5.3](https://marcobolo-project.eu/deliverables/) |
 | Resource        | MOD Alliance Webinar                   | [#5 explores mapping blue carbon in European seagrass beds](https://marcobolo-project.eu/mod-alliance-webinar-5-explores-mapping-blue-carbon-in-european-seagrass-beds/) \| [video](https://youtu.be/_wtJcVR59MQ?si=vm8tbuVjlwk16_EB) |
 | Tutorial        | How to run Seagrass Carbon Stock Model | [Tutorial.md](Tutorial.md) |
+| Workflows       | NaaVRE Workflows                       | <ul><li>[Option 1: Run the workflow for a single site using **parameter** input](./workflows/run_model_from_Param_input.naavrewf)</li><li> [Option 2: Run the workflow for multiple sites using **excel file** input](./workflows/run_model_from_Excel_upload.naavrewf)</li></ul>|
 
 </div>
 
