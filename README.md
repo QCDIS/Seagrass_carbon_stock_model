@@ -103,7 +103,7 @@ The EURO-CARBON v1 database contains 4,233 sediment carbon datapoints from seagr
 ![img_readme_03-Satellite_and_EURO-CARBON.png](documentation/images/img_readme_03-Satellite_and_EURO-CARBON.png "Satellite-derived composite particulate backscatter at 443 nm (PBS443) from
 Sentinel-3, overlaid with EURO-CARBON seagrass carbon measurement sites")
 
-## <a name='SeagrassCarbonStockModel'></a>Seagrass Carbon Stock Model, [virtual lab](https://beta.naavre.net/vreapp/vl/blue-carbon)
+## <a name='SeagrassCarbonStockModel'></a>Seagrass Carbon Stock Model
 
 We developed a multi-model approach combining machine learning 
 (Gaussian Process Regression, Decision Tree, Neural Network)
