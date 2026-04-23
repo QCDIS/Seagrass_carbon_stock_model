@@ -1,18 +1,3 @@
-<!-- vscode-markdown-toc -->
-- [Template cell](#template-cell)
-  - [param cell](#param-cell)
-  - [exec cell](#exec-cell)
-- [ECVs, ENVRI-HUB](#ecvs-envri-hub)
-  - [beacon](#beacon)
-    - [docker compose](#docker-compose)
-    - [api/info](#apiinfo)
-
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
-
 # Template cell
 
 ## <a name='paramcell'></a>param cell
