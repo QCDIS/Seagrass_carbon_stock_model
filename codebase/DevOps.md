@@ -11,33 +11,58 @@
 # ! pip list
 # ! conda list
 
+# !conda install -y requests
+# !conda install -y nest_asyncio
+
+# !conda install -y geopandas=0.10.2
+# !conda install -y rdflib=6.1.1
+
+# !pip show requests
+# !pip show nest_asyncio
+
+# !pip show geopandas
+# !pip show rdflib
+
 import os
 import sys
+import glob
 from datetime import datetime
+import importlib.util as importlib_util
+
+import shutil
+from pathlib import Path
+
+from io import StringIO
+import zipfile
+import asyncio
+import requests
+from urllib import parse
+import json.decoder
+
+import csv
+import pandas as pd
+
+# import nest_asyncio
 
 # base settings
 # -----
-conf_vlab_name     = "BlueCarbon"
-# conf_workflow_name = "Seagrass"
+conf_vlab_name     = "DNA"
+# conf_workflow_name = "PEMA"
 
-# conf_workflow_id = f"wid-{datetime.now().strftime('%Y%m%d_%H%M%S%f')}"
+# conf_workflow_id   = f"wid-{datetime.now().strftime('%Y%m%d_%H%M%S%f')}"
 param_workflow_name = "workflow name"
 
 # dev
 # -----
-# library: --volume="//c/DockerShare/ECVs:/home/jovyan" naavre-fl-ecvs-jupyter:local
-# NaaVRE: /home/jovyan/Virtual Labs/ECVs/Git public
-# dir_code = os.path.join("/", "home", "jovyan", "Virtual Labs")
-# if not os.path.exists(dir_code):
-#     os.makedirs(dir_code)
+# library: --volume="//c/DockerShare/DNA:/home/jovyan" naavre-fl-dna-jupyter:local
+# NaaVRE: /home/jovyan/Virtual Labs/DNA/Git public
+# conf_dir_code = os.path.join("/", "home", "jovyan", "Virtual Labs", conf_vlab_name, "Git public", "library")
+# if not os.path.exists(conf_dir_code):
+#     os.makedirs(conf_dir_code)
 
-# dir_data = os.path.join("/", "home", "jovyan", "Cloud Storage", "naa-vre-user-data")
-# if not os.path.exists(dir_data):
-#     os.makedirs(dir_data)
-
-# conf_dir_code  = os.path.join(dir_code, "ECVs", "Git public", "library")
-# conf_dir_data  = os.path.join(dir_data, "ECVs", param_workflow_name)
-# conf_dir_param = os.path.join(dir_data, "ECVs", param_workflow_name)
+# conf_dir_data  = os.path.join("/", "home", "jovyan", "Cloud Storage", "naa-vre-user-data", conf_vlab_name, param_workflow_name)
+# if not os.path.exists(conf_dir_data):
+#     os.makedirs(conf_dir_data)
 
 # local
 # -----
@@ -51,15 +76,26 @@ conf_minio_public_bucket      = "naa-vre-public"
 conf_minio_public_bucket_root = f"vl-{conf_vlab_name.lower()}"
 conf_minio_public_local_root  = os.path.join(conf_dir_workspace, conf_minio_public_bucket, conf_minio_public_bucket_root)
 conf_minio_public_local_code  = os.path.join(conf_dir_workspace, conf_minio_public_bucket, conf_minio_public_bucket_root, "code")
-conf_minio_public_local_data  = os.path.join(conf_dir_workspace, conf_minio_public_bucket, conf_minio_public_bucket_root, "data", conf_workflow_name)
+conf_minio_public_local_data  = os.path.join(conf_dir_workspace, conf_minio_public_bucket, conf_minio_public_bucket_root, "data")
 
 conf_minio_user_bucket        = "naa-vre-user-data"
 # conf_minio_user_bucket_root   = param_user_email
 conf_minio_user_bucket_root   = conf_vlab_name
 conf_minio_user_local_root    = os.path.join(conf_dir_workspace, conf_minio_user_bucket,   conf_minio_user_bucket_root)
 conf_minio_user_local_code    = os.path.join(conf_dir_workspace, conf_minio_user_bucket,   conf_minio_user_bucket_root,   "library")
-conf_minio_user_local_data    = os.path.join(conf_dir_workspace, conf_minio_user_bucket,   conf_minio_user_bucket_root,   f"{conf_workflow_name}-{param_workflow_name}")
+conf_minio_user_local_data    = os.path.join(conf_dir_workspace, conf_minio_user_bucket,   conf_minio_user_bucket_root,   param_workflow_name)
 conf_minio_user_local_flog    = os.path.join(conf_minio_user_local_data, "log.md")
+
+# for workflow step
+# .....
+# if os.path.exists(conf_minio_user_local_flog):
+#     with open(conf_minio_user_local_flog, "a+") as fp_log:
+#         fp_log.write(f"\n## {workflow_step}\n") 
+# else:
+#     if not os.path.exists(conf_minio_user_local_data):
+#         os.makedirs(conf_minio_user_local_data)
+#     with open(conf_minio_user_local_flog, "w+") as fp_log:
+#         fp_log.write(f"\n## {workflow_step}\n") 
 
 # API key
 # -----
@@ -70,33 +106,43 @@ conf_minio_user_local_flog    = os.path.join(conf_minio_user_local_data, "log.md
 
 # Input param
 # -----
-# CREA AA Italian historical weather series
-# https://api.anaee.eu/crea-aa-dailymeteo/
-conf_SERVICE_URL_CREA    = 'https://api.anaee.eu/crea-aa-dailymeteo'
-conf_SERVICE_METHOD_CREA = "POST"
+# workflow: 01, 02
+# .....
 
-# param_polygon_string = ""
-param_polygon_string = "" \
-"POLYGON(" \
-    "(" \
-    "10.15905865446625 43.58782080564057," \
-    "10.20849713102875 44.29581102576821," \
-    "9.23071392790375 44.73060761735282," \
-    "7.709107482591251 44.45678937969159," \
-    "7.385010802903751 43.72294797699299," \
-    "10.15905865446625 43.58782080564057" \
-    ")" \
-")"
+# PEMA-SequenceRetriever
+# .....
+conf_fname_seq_zip = "mydata.zip"
+conf_fpath_seq_zip = "mydata"                                                  # path in zip file
 
-param_crea_request_getStationData    = "getStationData"
-param_crea_start_date_getStationData = "2022-06-14"
-param_crea_end_date_getStationData   = "2022-06-20"
-param_crea_timestep_getStationData   = "hour"
+param_gene_sequences = "SRR3231901"
+# param_gene_sequences = "ERR3460470,ERR4018451,ERR4018452"                    # user input, sep=","
+
+# PEMA-Runner
+# .....
+# return: case_id
+conf_fname_par_tsv  = "parameters.tsv"
+
+param_fname_par_tsv = "Template-parameters.tsv"                                # upload file to conf_minio_user_local_root
+# add param_ for allowed settings in pema parameters.tsv
+
+# OTU
+# .....
+# pema_otu_delimiter = "\t"
+# bold_otu_delimiter = ","
+conf_delimiter_tsv = "\t"
+conf_delimiter_csv = ","
 
 print("Finish: NaaVRE parameters")
+print(f"Workspace public:")
+print(f"  Root: {conf_minio_public_local_root}")
+print(f"  Code: {conf_minio_public_local_code}")
+print(f"  Data: {conf_minio_public_local_data}")
 
-# func_call_restful_api = anaee_api.call_restful_api()
-# func_parse_wkt_point  = anaee_api.parse_wkt_point()
+print(f"Workspace user:")
+print(f"  Root: {conf_minio_user_local_root}")
+print(f"  Code: {conf_minio_user_local_code}")
+print(f"  Data: {conf_minio_user_local_data}")
+print(f"  Log:  {conf_minio_user_local_flog}")
 
 ```
 
@@ -149,8 +195,29 @@ else:
     with open(conf_minio_user_local_flog, "w+") as fp_log:
         fp_log.write(f"\n## {workflow_step}\n") 
 
-# lib
+# lib, minio_public
 # -----
+# sys.path.append(conf_minio_public_local_code)
+# print("sys.path minio_public")
+# for tmp_path in sys.path: print(f"* {tmp_path}")
+
+# py_module_name = 'classify_invasiveness'
+# if py_module_name in sys.modules:
+#     print(f"{py_module_name} already in sys.modules")
+# elif (spec := importlib_util.find_spec(py_module_name)) is not None:
+#     # If you chose to perform the actual import ...
+#     py_module_obj = importlib_util.module_from_spec(spec)
+#     sys.modules[py_module_name] = py_module_obj
+#     spec.loader.exec_module(py_module_obj)
+#     print(f"{py_module_name} has been imported")
+# else:
+#     print(f"can't find the {py_module_name} module")
+
+# lib, minio_user
+# -----
+# sys.path.append(conf_minio_user_local_code)
+# print("sys.path minio_user")
+# for tmp_path in sys.path: print(f"* {tmp_path}")
 
 # input
 # -----
@@ -172,17 +239,6 @@ with open(conf_minio_user_local_flog, "a+") as fp_log:
     fp_log.write(f"\nOutput: {conf_minio_user_local_data}\n")
 
 print(f"Finish: {workflow_step}")
-
-print(f"Workspace public:")
-print(f"  Root: {conf_minio_public_local_root}")
-print(f"  Code: {conf_minio_public_local_code}")
-print(f"  Data: {conf_minio_public_local_data}")
-
-print(f"Workspace user:")
-print(f"  Root: {conf_minio_user_local_root}")
-print(f"  Code: {conf_minio_user_local_code}")
-print(f"  Data: {conf_minio_user_local_data}")
-print(f"  Log:  {conf_minio_user_local_flog}")
 
 ```
 
