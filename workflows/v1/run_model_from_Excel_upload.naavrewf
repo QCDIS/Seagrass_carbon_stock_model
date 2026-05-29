@@ -1,8 +1,8 @@
 {
   "chart": {
     "offset": {
-      "x": 0,
-      "y": 0
+      "x": -335,
+      "y": 109
     },
     "scale": 1,
     "nodes": {
@@ -315,9 +315,6 @@
       }
     },
     "selected": {},
-    "hovered": {
-      "type": "node",
-      "id": "eb0d06c2-b530-4309-8e97-980c886419b1"
-    }
+    "hovered": {}
   }
 }
