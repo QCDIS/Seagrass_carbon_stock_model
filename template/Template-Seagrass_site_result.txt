@@ -1,0 +1,18 @@
+For the seagrass bed at latitude 56.0953 and longitude 14.7202
+The species identity Unspecified
+The predicted carbon stock in the upper 
+  - upper 30cm  of the sediment is 13.998 Mg/ha
+  - upper 100cm of the sediment is 49.741 Mg/ha
+
+For the seagrass bed at latitude 40.6248 and longitude 0.658723
+The species identity Cymodocea nodosa
+The predicted carbon stock in the upper 
+  - upper 30cm  of the sediment is 13.650 Mg/ha
+  - upper 100cm of the sediment is 48.504 Mg/ha
+
+For the seagrass bed at latitude 42.42777 and longitude 27.6516
+The species identity Zostera marina and Zostera noltei
+The predicted carbon stock in the upper 
+  - upper 30cm  of the sediment is 3.748 Mg/ha
+  - upper 100cm of the sediment is 13.318 Mg/ha
+
