@@ -214,6 +214,19 @@ All fold types are cached/reused via `output/cache/` to speed up re-runs.
 4. Once models have been saved and predictions generated, the `prediction_maps.ipynb` Jupyter notebook can be used to generate the predictive maps of carbon stocks. This requires downloading extra datasets (see below).
 Seed policy is documented in `modelling/_SEED_REGISTRY.md`.
 
+### Point predictions with the GPR model
+
+To extract carbon-density predictions for point coordinates, run:
+
+```bash
+Rscript predict_gpr_at_points.R <input.csv|input.xlsx> [model.rds] [output.csv]
+```
+
+The input must include `longitude`, `latitude`, and `seagrass_species`.
+Relative paths are resolved from `codebase/v2`; the model defaults to
+`data/review/GPR_final.rds`, and predictions are written under `output/review/`
+unless an output path is supplied.
+
 ### Python environment for `prediction_maps.ipynb` and `python_helpers`
 
 The requirements include the notebook and its `python_helpers` modules. Use a clean virtual environment and install them from `requirements.txt` via a `bash` terminal:
