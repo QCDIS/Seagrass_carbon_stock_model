@@ -19,6 +19,11 @@ source("modelling/analysis/run_tuning_seed_sweep.R")
 source("modelling/run_multiseed_pixel_grouped.R")
 ```
 
+The R package requirements used across the modelling and review scripts are listed in
+[`r-requirements.txt`](./r-requirements.txt). To install them without restoring the
+project's pinned `renv` environment, run `install.packages(readLines("r-requirements.txt"))`.
+The list is unpinned; use `renv::restore()` for the reproducible project environment.
+
 Generated files are stored under `output/`. The robust multiseed driver writes a **run-scoped** folder named from the selection seeds, e.g. `output/pixel_grouped_48-52-53-70-73/` (see `robust_fold_seed_list` / `seed_registry` in `pipeline_config.R`). That folder holds covariate selection, robust tuning/evaluation, diagnostics, and run metadata. Shared regime outputs (e.g. `output/pixel_grouped/covariate_selection/`) still use `cv_output_dir` from `cv_regime_name`. Cached artefacts shared across runs (e.g. prediction grids, fold caches) go in `output/cache/`.
 
 ---
@@ -209,9 +214,9 @@ All fold types are cached/reused via `output/cache/` to speed up re-runs.
 4. Once models have been saved and predictions generated, the `prediction_maps.ipynb` Jupyter notebook can be used to generate the predictive maps of carbon stocks. This requires downloading extra datasets (see below).
 Seed policy is documented in `modelling/_SEED_REGISTRY.md`.
 
-### Python environment for `prediction_maps.ipynb`
+### Python environment for `prediction_maps.ipynb` and `python_helpers`
 
-Use a clean virtual environment and install the notebook dependencies from `requirements.txt` via a `bash` terminal:
+The requirements include the notebook and its `python_helpers` modules. Use a clean virtual environment and install them from `requirements.txt` via a `bash` terminal:
 
 ```bash
 python3 -m venv .venv
@@ -256,4 +261,3 @@ Exclusive Economic Zones (EEZs) were obtained from the Marine Regions website vi
 
 - This workflow is designed for gap-filling near sampled conditions; extrapolation to novel environments may degrade (as shown when datasets `cv_type = "spatial`).
 - Reported performance depends on fold construction and seed policy; robust multiseed evaluation is used to reduce split-variance artifacts.
-

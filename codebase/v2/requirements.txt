@@ -1,0 +1,16 @@
+# Python dependencies for prediction_maps.ipynb and python_helpers.
+# Install with: python -m pip install -r requirements.txt
+
+numpy
+pandas
+geopandas
+shapely
+pyogrio
+rasterio
+xarray
+netCDF4
+pyarrow
+matplotlib
+cartopy
+tqdm
+ipykernel
