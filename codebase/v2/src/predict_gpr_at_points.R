@@ -1,20 +1,57 @@
 # Predict carbon density at point locations using a saved GPR model.
 #
-# Run from any directory:
-#   Rscript predict_gpr_at_points.R <input.csv|input.xlsx> [model.rds] [output.csv]
-# Relative paths are resolved from the codebase/v2 directory.
+# Set the paths below, then run this file from the R kernel in
+# predict_gpr_at_points.ipynb or with `Rscript predict_gpr_at_points.R`.
 
 script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-if (length(script_arg) == 0L) {
-  stop("Cannot determine script path; run this file with Rscript.", call. = FALSE)
+script_path <- if (length(script_arg) > 0L) {
+  sub("^--file=", "", script_arg[[1L]])
+} else {
+  source_files <- vapply(
+    sys.frames(),
+    function(frame) if (is.null(frame$ofile)) NA_character_ else frame$ofile,
+    character(1)
+  )
+  source_files <- source_files[!is.na(source_files)]
+  if (length(source_files) > 0L) tail(source_files, 1L) else NA_character_
 }
-script_dir <- dirname(normalizePath(
-  sub("^--file=", "", script_arg[[1L]]),
-  winslash = "/",
-  mustWork = TRUE
-))
 
-sys.source(file.path(script_dir, "modelling", "R", "init_repo.R"), envir = .GlobalEnv)
+find_project_root <- function(start_dir) {
+  current_dir <- normalizePath(start_dir, winslash = "/", mustWork = FALSE)
+  for (i in seq_len(40L)) {
+    if (file.exists(file.path(current_dir, "modelling", "R", "init_repo.R"))) {
+      return(current_dir)
+    }
+    nested_root <- file.path(current_dir, "codebase", "v2", "src")
+    if (file.exists(file.path(nested_root, "modelling", "R", "init_repo.R"))) {
+      return(normalizePath(nested_root, winslash = "/", mustWork = TRUE))
+    }
+    parent_dir <- dirname(current_dir)
+    if (identical(parent_dir, current_dir)) break
+    current_dir <- parent_dir
+  }
+  NA_character_
+}
+
+start_dirs <- getwd()
+if (!is.na(script_path)) {
+  normalized_script_path <- normalizePath(script_path, winslash = "/", mustWork = TRUE)
+  start_dirs <- c(start_dirs, dirname(normalized_script_path))
+}
+project_root <- NA_character_
+for (start_dir in unique(start_dirs)) {
+  project_root <- find_project_root(start_dir)
+  if (!is.na(project_root)) break
+}
+if (is.na(project_root)) {
+  stop(
+    "Cannot find the v2 project root. Run from codebase/v2/src or its parent ",
+    "directory, or source this file from the project.",
+    call. = FALSE
+  )
+}
+
+sys.source(file.path(project_root, "modelling", "R", "init_repo.R"), envir = .GlobalEnv)
 project_root <- seagrass_init_repo(
   packages = c("dplyr", "readr", "readxl"),
   source_files = c(
@@ -27,27 +64,14 @@ project_root <- seagrass_init_repo(
   check_renv = FALSE
 )
 
-args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 1L || length(args) > 3L) {
-  stop(
-    "Usage: Rscript predict_gpr_at_points.R <input.csv|input.xlsx> ",
-    "[model.rds] [output.csv]",
-    call. = FALSE
-  )
-}
-
-input_path <- args[[1L]]
-model_path <- if (length(args) >= 2L) {
-  args[[2L]]
-} else {
-  file.path(project_root, "data", "review", "GPR_final.rds")
-}
-output_path <- if (length(args) >= 3L) {
-  args[[3L]]
-} else {
-  input_stem <- tools::file_path_sans_ext(basename(input_path))
-  file.path("output", "review", paste0(input_stem, "_gpr_predictions.csv"))
-}
+# Configure these project-root-relative paths before running the script.
+input_path <- file.path("data", "review", "PercOC_only_unique_reduced_df_predictions.csv")
+model_path <- file.path("data", "review", "GPR_final.rds")
+output_path <- file.path(
+  "output",
+  "review",
+  "PercOC_only_unique_reduced_df_predictions_gpr_predictions.csv"
+)
 
 if (!file.exists(input_path)) stop("Input file not found: ", input_path, call. = FALSE)
 if (!file.exists(model_path)) stop("GPR model file not found: ", model_path, call. = FALSE)

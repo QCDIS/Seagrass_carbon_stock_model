@@ -216,16 +216,19 @@ Seed policy is documented in `modelling/_SEED_REGISTRY.md`.
 
 ### Point predictions with the GPR model
 
-To extract carbon-density predictions for point coordinates, run:
+Set `input_path`, `model_path`, and `output_path` near the top of
+`predict_gpr_at_points.R` (paths are relative to `codebase/v2/src`). Then open
+`predict_gpr_at_points.ipynb`, select its R kernel, and run the cell. The
+notebook sources the R script, so the prediction logic and editable paths stay
+in one place. The script can also be run directly without command-line
+arguments:
 
 ```bash
-Rscript predict_gpr_at_points.R <input.csv|input.xlsx> [model.rds] [output.csv]
+Rscript predict_gpr_at_points.R
 ```
 
-The input must include `longitude`, `latitude`, and `seagrass_species`.
-Relative paths are resolved from `codebase/v2`; the model defaults to
-`data/review/GPR_final.rds`, and predictions are written under `output/review/`
-unless an output path is supplied.
+The input must include `longitude`, `latitude`, and `seagrass_species`. The
+configured model defaults to `data/review/GPR_final.rds`.
 
 ### Python environment for `prediction_maps.ipynb` and `python_helpers`
 
