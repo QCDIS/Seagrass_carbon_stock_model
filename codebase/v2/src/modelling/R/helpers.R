@@ -1,16 +1,37 @@
 # ================================ UTILITY FUNCTIONS ================================
 # Manuscript figure theme (ggplot2 default after sourcing)
 if (!exists("seagrass_init_repo", mode = "function", inherits = TRUE)) {
-  source("modelling/R/init_repo.R")
+  init_candidates <- file.path("modelling", "R", "init_repo.R")
+  source_files <- unlist(lapply(sys.frames(), function(frame) {
+    ofile <- get0("ofile", envir = frame, inherits = FALSE)
+    if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+  }), use.names = FALSE)
+  init_candidates <- c(init_candidates, file.path(dirname(source_files), "init_repo.R"))
+  init_path <- init_candidates[file.exists(init_candidates)][1]
+  if (is.na(init_path)) {
+    stop("Cannot locate modelling/R/init_repo.R to load modelling helpers.", call. = FALSE)
+  }
+  sys.source(normalizePath(init_path, winslash = "/", mustWork = TRUE), envir = .GlobalEnv)
 }
-project_root <- seagrass_init_repo(
-  packages = c("dplyr", "here", "digest"),
-  source_files = c("modelling/plots/plot_config.R"),
-  include_helpers = FALSE,
-  require_core_inputs = FALSE,
-  check_renv = TRUE
-)
-source(file.path(project_root, "modelling", "R", "ml.R"))
+if (isTRUE(get0(
+  ".seagrass_initializing_helpers",
+  envir = .GlobalEnv,
+  inherits = FALSE,
+  ifnotfound = FALSE
+))) {
+  seagrass_source_project_root()
+  project_root <- seagrass_project_root()
+  seagrass_source_project_file(project_root, file.path("modelling", "plots", "plot_config.R"))
+} else {
+  project_root <- seagrass_init_repo(
+    packages = c("dplyr", "here", "digest"),
+    source_files = c("modelling/plots/plot_config.R"),
+    include_helpers = FALSE,
+    require_core_inputs = FALSE,
+    check_renv = TRUE
+  )
+}
+seagrass_source_project_file(project_root, file.path("modelling", "R", "ml.R"))
 
 safe_write_csv <- function(x, path) {
   tryCatch(

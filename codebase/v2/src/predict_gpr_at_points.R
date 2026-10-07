@@ -7,12 +7,10 @@ script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
 script_path <- if (length(script_arg) > 0L) {
   sub("^--file=", "", script_arg[[1L]])
 } else {
-  source_files <- vapply(
-    sys.frames(),
-    function(frame) if (is.null(frame$ofile)) NA_character_ else frame$ofile,
-    character(1)
-  )
-  source_files <- source_files[!is.na(source_files)]
+  source_files <- unlist(lapply(sys.frames(), function(frame) {
+    ofile <- get0("ofile", envir = frame, inherits = FALSE)
+    if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+  }), use.names = FALSE)
   if (length(source_files) > 0L) tail(source_files, 1L) else NA_character_
 }
 
@@ -35,8 +33,7 @@ find_project_root <- function(start_dir) {
 
 start_dirs <- getwd()
 if (!is.na(script_path)) {
-  normalized_script_path <- normalizePath(script_path, winslash = "/", mustWork = TRUE)
-  start_dirs <- c(start_dirs, dirname(normalized_script_path))
+  start_dirs <- c(start_dirs, dirname(script_path))
 }
 project_root <- NA_character_
 for (start_dir in unique(start_dirs)) {
@@ -51,15 +48,14 @@ if (is.na(project_root)) {
   )
 }
 
-sys.source(file.path(project_root, "modelling", "R", "init_repo.R"), envir = .GlobalEnv)
+sys.source(
+  file.path(project_root, "modelling", "R", "init_repo.R"),
+  envir = .GlobalEnv
+)
 project_root <- seagrass_init_repo(
   packages = c("dplyr", "readr", "readxl"),
-  source_files = c(
-    "modelling/R/helpers.R",
-    "modelling/R/ml.R",
-    "modelling/R/extract_covariates_from_rasters.R"
-  ),
-  include_helpers = FALSE,
+  source_files = c("modelling/R/extract_covariates_from_rasters.R"),
+  include_helpers = TRUE,
   require_core_inputs = FALSE,
   check_renv = FALSE
 )
@@ -72,6 +68,10 @@ output_path <- file.path(
   "review",
   "PercOC_only_unique_reduced_df_predictions_gpr_predictions.csv"
 )
+
+input_path <- file.path(project_root, input_path)
+model_path <- file.path(project_root, model_path)
+output_path <- file.path(project_root, output_path)
 
 if (!file.exists(input_path)) stop("Input file not found: ", input_path, call. = FALSE)
 if (!file.exists(model_path)) stop("GPR model file not found: ", model_path, call. = FALSE)

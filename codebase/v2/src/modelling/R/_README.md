@@ -1,7 +1,12 @@
 # R helpers and core logic
 
 Shared R code used by the pipeline and plot scripts. Startup is centralized via
-`init_repo.R`; `helpers.R` sources `ml.R`.
+`init_repo.R`; `helpers.R` loads the plot configuration and `ml.R`. The bootstrap
+can resolve the repository root from the current directory, an `Rscript --file`
+entry point, or the active R `source()` stack, so these shared files can be
+loaded when the working directory is outside the repository. Source files
+requested through `seagrass_init_repo()` are resolved from the repository root
+and missing files produce an explicit error.
 
 ---
 

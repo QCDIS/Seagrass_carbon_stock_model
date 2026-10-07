@@ -16,23 +16,24 @@ seagrass_project_root <- function() {
     }
     NA_character_
   }
-  root <- walk_from(getwd())
-  if (!is.na(root)) return(root)
+
+  source_files <- unlist(lapply(sys.frames(), function(frame) {
+    ofile <- get0("ofile", envir = frame, inherits = FALSE)
+    if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+  }), use.names = FALSE)
+  starts <- c(getwd(), dirname(source_files))
   ca <- commandArgs(trailingOnly = FALSE)
   ff <- grep("^--file=", ca, value = TRUE)
   if (length(ff)) {
     sp <- sub("^--file=", "", ff[[1]])
-    if (nzchar(sp)) {
-      sd <- tryCatch(
-        normalizePath(dirname(sp), winslash = "/", mustWork = FALSE),
-        error = function(e) NA_character_
-      )
-      if (!is.na(sd) && nzchar(sd)) {
-        root <- walk_from(sd)
-        if (!is.na(root)) return(root)
-      }
-    }
+    if (nzchar(sp)) starts <- c(starts, dirname(sp))
   }
+
+  for (start_dir in unique(starts)) {
+    root <- walk_from(start_dir)
+    if (!is.na(root)) return(root)
+  }
+
   if (requireNamespace("here", quietly = TRUE)) {
     hr <- tryCatch(
       normalizePath(here::here(), winslash = "/", mustWork = FALSE),
@@ -48,6 +49,19 @@ seagrass_project_root <- function() {
     "  cd into the clone, or run: Rscript /path/to/any/script/inside/this/repo.R",
     call. = FALSE
   )
+}
+
+seagrass_source_project_file <- function(project_root, relative_path,
+                                         envir = .GlobalEnv) {
+  path <- file.path(project_root, relative_path)
+  if (!file.exists(path)) {
+    stop("Missing project source file: ", path, call. = FALSE)
+  }
+  sys.source(
+    normalizePath(path, winslash = "/", mustWork = TRUE),
+    envir = envir
+  )
+  invisible(path)
 }
 
 seagrass_setwd_project_root <- function() {
