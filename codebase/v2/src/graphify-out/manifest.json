@@ -1,0 +1,326 @@
+{
+  ".vscode/settings.json": {
+    "mtime": 1790860371.1381083,
+    "seen": 1791450702.5300703,
+    "ast_hash": "d5c92f847db8fcd3f2319d65c8dac33a",
+    "semantic_hash": "d5c92f847db8fcd3f2319d65c8dac33a"
+  },
+  "modelling/R/assign_region_from_latlon.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "801f878d3168b2e9db6a449a460d8425",
+    "semantic_hash": "801f878d3168b2e9db6a449a460d8425"
+  },
+  "modelling/R/build_all_extracted_new.R": {
+    "mtime": 1791393381.6329725,
+    "seen": 1791450702.5300703,
+    "ast_hash": "2fd97b025ae52730b6fc3a6f686566a6",
+    "semantic_hash": "2fd97b025ae52730b6fc3a6f686566a6"
+  },
+  "modelling/R/covariate_na_map.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "e9011901345e651ae3b81d593f35a7bb",
+    "semantic_hash": "e9011901345e651ae3b81d593f35a7bb"
+  },
+  "modelling/R/extract_covariates_from_rasters.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "0203e4ada5fe00804cafec7ee83aaa0a",
+    "semantic_hash": "0203e4ada5fe00804cafec7ee83aaa0a"
+  },
+  "modelling/R/fit_final_models.R": {
+    "mtime": 1791393381.6626146,
+    "seen": 1791450702.5300703,
+    "ast_hash": "89b79e989e6782587829348b348c0e4b",
+    "semantic_hash": "89b79e989e6782587829348b348c0e4b"
+  },
+  "modelling/R/helpers.R": {
+    "mtime": 1791393444.0694342,
+    "seen": 1791450702.5300703,
+    "ast_hash": "38c34020934e3dc1a4d39d4799bbfb47",
+    "semantic_hash": "38c34020934e3dc1a4d39d4799bbfb47"
+  },
+  "modelling/R/init_repo.R": {
+    "mtime": 1791393443.7272398,
+    "seen": 1791450702.5300703,
+    "ast_hash": "f91ca8f52e6cf607a06b450e8adcc152",
+    "semantic_hash": "f91ca8f52e6cf607a06b450e8adcc152"
+  },
+  "modelling/R/ml.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "60de2a6923409e87feb4acf5f0ff4c3a",
+    "semantic_hash": "60de2a6923409e87feb4acf5f0ff4c3a"
+  },
+  "modelling/R/project_root.R": {
+    "mtime": 1791393367.4575396,
+    "seen": 1791450702.5300703,
+    "ast_hash": "a348f55d6beb52e6b28721f13bac5a47",
+    "semantic_hash": "a348f55d6beb52e6b28721f13bac5a47"
+  },
+  "modelling/analysis/compile_model_performance_summaries.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "70aba95d1f7e303a76c650fdfdc37344",
+    "semantic_hash": "70aba95d1f7e303a76c650fdfdc37344"
+  },
+  "modelling/analysis/diagnose_r2_components_by_fold.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "0e246b0823f8d3adf63a6b57072b96cd",
+    "semantic_hash": "0e246b0823f8d3adf63a6b57072b96cd"
+  },
+  "modelling/analysis/fold_sensitivity_check.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "abbef87677dd088e74d0c5d8d9173139",
+    "semantic_hash": "abbef87677dd088e74d0c5d8d9173139"
+  },
+  "modelling/analysis/model_comparison.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "6fd7a841466af98f2bdcbeeaaab84a9d",
+    "semantic_hash": "6fd7a841466af98f2bdcbeeaaab84a9d"
+  },
+  "modelling/analysis/run_tuning_seed_sweep.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "1c0942c42c5bf7faffd4cb03325ed8fc",
+    "semantic_hash": "1c0942c42c5bf7faffd4cb03325ed8fc"
+  },
+  "modelling/analysis/sensitivity_suite.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "979bbf6ba9e7056e9df4e953ce5bdd62",
+    "semantic_hash": "979bbf6ba9e7056e9df4e953ce5bdd62"
+  },
+  "modelling/analysis/showcase_species_encoding.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "de403c18567bf0bde40d734d5d655a9d",
+    "semantic_hash": "de403c18567bf0bde40d734d5d655a9d"
+  },
+  "modelling/multiseed/robust_evaluation.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "27a75efebb6c350f8d2939ea1f509344",
+    "semantic_hash": "27a75efebb6c350f8d2939ea1f509344"
+  },
+  "modelling/multiseed/robust_hyperparameter_tuning.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "75645721580fc9509d16b4653f176dbe",
+    "semantic_hash": "75645721580fc9509d16b4653f176dbe"
+  },
+  "modelling/multiseed/robust_shap_covariate_pruning.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "e395a357c586de0b8adf947c9d7ec61e",
+    "semantic_hash": "e395a357c586de0b8adf947c9d7ec61e"
+  },
+  "modelling/multiseed/train_test_fraction_diagnostic.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "9bdc83da6801cf2213ebb0d71ba6b1c3",
+    "semantic_hash": "9bdc83da6801cf2213ebb0d71ba6b1c3"
+  },
+  "modelling/pipeline_config.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "790fbb3f830a1331e55519918e64f145",
+    "semantic_hash": "790fbb3f830a1331e55519918e64f145"
+  },
+  "modelling/plots/plot_config.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "960987dd63db37f01fec57e24cac3759",
+    "semantic_hash": "960987dd63db37f01fec57e24cac3759"
+  },
+  "modelling/plots/plot_model_comparison.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "9dd95e50f11d40e33bf80de8c88696eb",
+    "semantic_hash": "9dd95e50f11d40e33bf80de8c88696eb"
+  },
+  "modelling/plots/plot_partial_dependence.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "1b12440cb560ec747a0f3c3ba58de01a",
+    "semantic_hash": "1b12440cb560ec747a0f3c3ba58de01a"
+  },
+  "modelling/plots/plot_robust_shap_importance.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "00295bb131e4b2b33a90d80fe4715e5b",
+    "semantic_hash": "00295bb131e4b2b33a90d80fe4715e5b"
+  },
+  "modelling/plots/plot_sensitivity_suite.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "2daefd9bee5be9cd6f817d99703554ed",
+    "semantic_hash": "2daefd9bee5be9cd6f817d99703554ed"
+  },
+  "modelling/plots/plot_spatial_prediction_maps.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "5ed481165583ae8f45b037aad7924ce6",
+    "semantic_hash": "5ed481165583ae8f45b037aad7924ce6"
+  },
+  "modelling/plots/plot_tuning_seed_sweep.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "f616427d30d5b45feeca3731b30b8a07",
+    "semantic_hash": "f616427d30d5b45feeca3731b30b8a07"
+  },
+  "modelling/plots/supplement.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "edf5f3c6686063fbad52351d0664216f",
+    "semantic_hash": "edf5f3c6686063fbad52351d0664216f"
+  },
+  "modelling/run_multiseed_pixel_grouped.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "39f9a06ad99873c99687c14bc4ce8b1a",
+    "semantic_hash": "39f9a06ad99873c99687c14bc4ce8b1a"
+  },
+  "predict_gpr_at_points.R": {
+    "mtime": 1791394556.4294872,
+    "seen": 1791450702.5300703,
+    "ast_hash": "a9bda9d2cd24560674d4488fa0186908",
+    "semantic_hash": "a9bda9d2cd24560674d4488fa0186908"
+  },
+  "python_helpers/__init__.py": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "573ddd3c2b2fb380ac0793424aa4213b",
+    "semantic_hash": "573ddd3c2b2fb380ac0793424aa4213b"
+  },
+  "python_helpers/data_processing.py": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "92cee8cbc145bf38a7c20e1929a844ee",
+    "semantic_hash": "92cee8cbc145bf38a7c20e1929a844ee"
+  },
+  "python_helpers/map_panels.py": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "b77cc1bb2ac5e21a9941dbbf69657fd0",
+    "semantic_hash": "b77cc1bb2ac5e21a9941dbbf69657fd0"
+  },
+  "python_helpers/spatial_join.py": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "a1ae5476834e780e9cde8a3fa227d0e7",
+    "semantic_hash": "a1ae5476834e780e9cde8a3fa227d0e7"
+  },
+  "python_helpers/species_assignment.py": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "60aab415454a36083e1de78be65846d7",
+    "semantic_hash": "60aab415454a36083e1de78be65846d7"
+  },
+  "python_helpers/stocks.py": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "eeb93cc5c808bdf310b538c125689363",
+    "semantic_hash": "eeb93cc5c808bdf310b538c125689363"
+  },
+  "renv/activate.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "804f1470e233b63370cbcdec9e6647dc",
+    "semantic_hash": "804f1470e233b63370cbcdec9e6647dc"
+  },
+  "renv/settings.json": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "4991632d76a14ff4055fb930468295b4",
+    "semantic_hash": "4991632d76a14ff4055fb930468295b4"
+  },
+  "review/calculate_carbon_density_from_points.R": {
+    "mtime": 1790941256.8755608,
+    "seen": 1791450702.5300703,
+    "ast_hash": "c90fb0d7283610213bb670a5a2711690",
+    "semantic_hash": "c90fb0d7283610213bb670a5a2711690"
+  },
+  "review/compare_predictions_with_additional_samples.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "1aaa5cb3f4b612f4fc06b3b88e7a461b",
+    "semantic_hash": "1aaa5cb3f4b612f4fc06b3b88e7a461b"
+  },
+  "review/env_training_comparison.R": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "67551d8f07888bd3f1066a46505bc10d",
+    "semantic_hash": "67551d8f07888bd3f1066a46505bc10d"
+  },
+  "README.md": {
+    "mtime": 1791377045.7477322,
+    "seen": 1791450702.5300703,
+    "ast_hash": "686037dd78a2e37df97fe9ecc2f66602",
+    "semantic_hash": "686037dd78a2e37df97fe9ecc2f66602"
+  },
+  "modelling/R/_README.md": {
+    "mtime": 1791393367.5906606,
+    "seen": 1791450702.5300703,
+    "ast_hash": "d8f7a764c05825c97802200a67140f22",
+    "semantic_hash": "d8f7a764c05825c97802200a67140f22"
+  },
+  "modelling/_SEED_REGISTRY.md": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "0869c23b5d19a6bcbb4a7618df52648a",
+    "semantic_hash": "0869c23b5d19a6bcbb4a7618df52648a"
+  },
+  "modelling/analysis/_README.md": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "a72529fcee6b1593c3de6e4890291896",
+    "semantic_hash": "a72529fcee6b1593c3de6e4890291896"
+  },
+  "modelling/multiseed/_README.md": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "88a835040186ce7411f9f5252aadda41",
+    "semantic_hash": "88a835040186ce7411f9f5252aadda41"
+  },
+  "modelling/plots/_README.md": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "104e18f7d8ad6d1cd35b003b61d8d89a",
+    "semantic_hash": "104e18f7d8ad6d1cd35b003b61d8d89a"
+  },
+  "r-requirements.txt": {
+    "mtime": 1791189538.8766944,
+    "seen": 1791450702.5300703,
+    "ast_hash": "d07f7867f52f5ee195320108237e2555",
+    "semantic_hash": "d07f7867f52f5ee195320108237e2555"
+  },
+  "requirements.txt": {
+    "mtime": 1791189538.884412,
+    "seen": 1791450702.5300703,
+    "ast_hash": "48e938e5a613872cd30cc333771e9a5e",
+    "semantic_hash": "48e938e5a613872cd30cc333771e9a5e"
+  },
+  "architecture.png": {
+    "mtime": 1790861008.963823,
+    "seen": 1791450702.5300703,
+    "ast_hash": "dadb011f2ab65aac809d98209fc01baf",
+    "semantic_hash": "dadb011f2ab65aac809d98209fc01baf"
+  },
+  "report/carbon_calculation_flowchart.png": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "8e36a731ad29ad36bdc58d1dcc48fee0",
+    "semantic_hash": "8e36a731ad29ad36bdc58d1dcc48fee0"
+  },
+  "report/modelling_flowchart.png": {
+    "mtime": 1789637414.0,
+    "seen": 1791450702.5300703,
+    "ast_hash": "4527c45f72944824a9be9060eda52224",
+    "semantic_hash": "4527c45f72944824a9be9060eda52224"
+  }
+}
