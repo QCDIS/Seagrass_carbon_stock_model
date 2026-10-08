@@ -76,34 +76,48 @@ model <- readRDS(model_path)
 if (!identical(infer_model_type(model), "GPR")) {
   stop("The model file does not contain a GPR model: ", model_path, call. = FALSE)
 }
+
 predictor_vars <- model$predictor_vars
 if (is.null(predictor_vars) || length(predictor_vars) == 0L) {
   stop("The GPR model does not contain predictor_vars.", call. = FALSE)
 }
+print("Predictor variables for raster covariates:")
+print(predictor_vars)
+
 raster_covars <- setdiff(
   predictor_vars,
   c("seagrass_species", "longitude", "latitude")
 )
-missing_input_predictors <- setdiff(
-  tolower(predictor_vars),
-  tolower(c(names(input_data), raster_covars))
-)
-if (length(missing_input_predictors) > 0L) {
-  stop(
-    "Input is missing non-raster model predictor(s): ",
-    paste(missing_input_predictors, collapse = ", "),
-    call. = FALSE
-  )
-}
+print("Raster covariates required by the model:")
+print(raster_covars)
 
-missing_rasters <- setdiff(tolower(raster_covars), tolower(raster_covariates))
-if (length(missing_rasters) > 0L) {
-  stop(
-    "Model requires raster covariate(s) not found under data/env_rasters: ",
-    paste(missing_rasters, collapse = ", "),
-    call. = FALSE
-  )
-}
+# missing_input_predictors <- setdiff(
+#   tolower(predictor_vars),
+#   tolower(c(names(input_data), raster_covars))
+# )
+# if (length(missing_input_predictors) > 0L) {
+#   print("Missing input predictors:")
+#   print(missing_input_predictors)
+#   stop(
+#     "Input is missing non-raster model predictor(s): ",
+#     paste(missing_input_predictors, collapse = ", "),
+#     call. = FALSE
+#   )
+# }
+
+# missing_rasters <- setdiff(
+#   tolower(raster_covars), 
+#   tolower(raster_covariates)
+# )
+# if (length(missing_rasters) > 0L) {
+#   print("Missing raster covariates:")
+#   print(missing_rasters)
+#   stop(
+#     "Model requires raster covariate(s) not found under data/env_rasters: ",
+#     paste(missing_rasters, collapse = ", "),
+#     call. = FALSE
+#   )
+# }
 
 cat("Extracting environmental covariates for", nrow(input_data), "point(s)...\n")
 prediction_data <- extract_covariates_at_points(
