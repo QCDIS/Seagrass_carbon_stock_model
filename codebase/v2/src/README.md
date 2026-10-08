@@ -227,8 +227,45 @@ arguments:
 Rscript predict_gpr_at_points.R
 ```
 
+Jupyter may start the R kernel in its server directory (for example,
+`/home/jovyan`) rather than the notebook directory. Startup checks the kernel
+working directory and its ancestors for the v2 source tree, and also checks
+the named clone `Seagrass_carbon_stock_model` beneath the working directory.
+It does not recursively search unrelated folders.
+
+For another mount location, edit `project_path` in the notebook's first cell:
+
+```r
+project_path <- "/home/jovyan/Seagrass_carbon_stock_model"
+```
+
+The path can point to the clone root, `codebase/v2`, or `codebase/v2/src`.
+Alternatively, set the environment variable before running the first cell
+(or before sourcing the R script):
+
+```r
+Sys.setenv(SEAGRASS_V2_ROOT = "/home/jovyan/Seagrass_carbon_stock_model")
+```
+
+Leave the notebook setting at `Sys.getenv("SEAGRASS_V2_ROOT", "")` to use the
+environment variable, or an empty string for automatic discovery. An invalid
+explicit path fails instead of falling back to another clone. The error lists
+the kernel working directory and checked locations; the path must exist
+inside the Jupyter environment, not just on the host machine. Successful
+startup switches the working directory to the resolved v2 source root.
+The second notebook cell prints startup diagnostics without rerunning predictions.
+
 The input must include `longitude`, `latitude`, and `seagrass_species`. The
 configured model defaults to `data/review/GPR_final.rds`.
+
+Startup regression checks use Python's standard library and base R only:
+
+```bash
+python tests/test_point_prediction_startup.py
+```
+
+If `Rscript` is not on `PATH`, add `--rscript` with the path to its executable.
+These checks exercise discovery and script initialization, not model predictions.
 
 ### Python environment for `prediction_maps.ipynb` and `python_helpers`
 

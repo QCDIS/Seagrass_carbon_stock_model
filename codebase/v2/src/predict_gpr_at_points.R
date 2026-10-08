@@ -3,50 +3,28 @@
 # Set the paths below, then run this file from the R kernel in
 # predict_gpr_at_points.ipynb or with `Rscript predict_gpr_at_points.R`.
 
+source_files <- unlist(lapply(sys.frames(), function(frame) {
+  ofile <- get0("ofile", envir = frame, inherits = FALSE)
+  if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+}), use.names = FALSE)
 script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-script_path <- if (length(script_arg) > 0L) {
+script_path <- if (length(source_files) > 0L) {
+  tail(source_files, 1L)
+} else if (length(script_arg) > 0L) {
   sub("^--file=", "", script_arg[[1L]])
 } else {
-  source_files <- unlist(lapply(sys.frames(), function(frame) {
-    ofile <- get0("ofile", envir = frame, inherits = FALSE)
-    if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
-  }), use.names = FALSE)
-  if (length(source_files) > 0L) tail(source_files, 1L) else NA_character_
-}
-
-find_project_root <- function(start_dir) {
-  current_dir <- normalizePath(start_dir, winslash = "/", mustWork = FALSE)
-  for (i in seq_len(40L)) {
-    if (file.exists(file.path(current_dir, "modelling", "R", "init_repo.R"))) {
-      return(current_dir)
-    }
-    nested_root <- file.path(current_dir, "codebase", "v2", "src")
-    if (file.exists(file.path(nested_root, "modelling", "R", "init_repo.R"))) {
-      return(normalizePath(nested_root, winslash = "/", mustWork = TRUE))
-    }
-    parent_dir <- dirname(current_dir)
-    if (identical(parent_dir, current_dir)) break
-    current_dir <- parent_dir
-  }
-  NA_character_
-}
-
-start_dirs <- getwd()
-if (!is.na(script_path)) {
-  start_dirs <- c(start_dirs, dirname(script_path))
-}
-project_root <- NA_character_
-for (start_dir in unique(start_dirs)) {
-  project_root <- find_project_root(start_dir)
-  if (!is.na(project_root)) break
-}
-if (is.na(project_root)) {
   stop(
-    "Cannot find the v2 project root. Run from codebase/v2/src or its parent ",
-    "directory, or source this file from the project.",
+    "Source predict_gpr_at_points.R or run it with Rscript; ",
+    "in Jupyter, run predict_gpr_at_points.ipynb.",
     call. = FALSE
   )
 }
+sys.source(
+  file.path(dirname(script_path), "modelling", "R", "project_root.R"),
+  envir = .GlobalEnv
+)
+project_root <- seagrass_find_v2_root(c(dirname(script_path), getwd()))
+setwd(project_root)
 
 sys.source(
   file.path(project_root, "modelling", "R", "init_repo.R"),
