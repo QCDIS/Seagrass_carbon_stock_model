@@ -13,8 +13,7 @@ script_path <- if (length(source_files) > 0L) {
   sub("^--file=", "", script_arg[[1L]])
 } else {
   stop(
-    "Source predict_gpr_at_points.R or run it with Rscript; ",
-    "in Jupyter, run predict_gpr_at_points.ipynb.",
+    "Source predict_gpr_at_points.R or run it with Rscript.",
     call. = FALSE
   )
 }

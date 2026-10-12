@@ -231,13 +231,9 @@ Alternatively, set `SEAGRASS_V2_ROOT` to the clone root,
 Sys.setenv(SEAGRASS_V2_ROOT = "/home/jovyan/Seagrass_carbon_stock_model")
 ```
 
-Leave the notebook setting at `Sys.getenv("SEAGRASS_V2_ROOT", "")` to use the
-environment variable, or an empty string for automatic discovery. An invalid
-explicit path fails instead of falling back to another clone. The error lists
-the kernel working directory and checked locations; the path must exist
-inside the Jupyter environment, not just on the host machine. Successful
-startup switches the working directory to the resolved v2 source root.
-The second notebook cell prints startup diagnostics without rerunning predictions.
+An invalid explicit path fails instead of falling back to another clone.
+Successful startup switches the working directory to the resolved v2 source
+root.
 
 The input must include `longitude`, `latitude`, and `seagrass_species`. The
 configured model defaults to `data/review/GPR_final.rds`.
