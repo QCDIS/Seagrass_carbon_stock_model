@@ -1,7 +1,6 @@
 # Predict carbon density at point locations using a saved GPR model.
 #
-# Set the paths below, then run this file from the R kernel in
-# predict_gpr_at_points.ipynb or with `Rscript predict_gpr_at_points.R`.
+# Set the paths below, then run this file with `Rscript predict_gpr_at_points.R`.
 
 source_files <- unlist(lapply(sys.frames(), function(frame) {
   ofile <- get0("ofile", envir = frame, inherits = FALSE)

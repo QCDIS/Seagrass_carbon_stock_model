@@ -217,31 +217,15 @@ Seed policy is documented in `modelling/_SEED_REGISTRY.md`.
 ### Point predictions with the GPR model
 
 Set `input_path`, `model_path`, and `output_path` near the top of
-`predict_gpr_at_points.R` (paths are relative to `codebase/v2/src`). Then open
-`predict_gpr_at_points.ipynb`, select its R kernel, and run the cell. The
-notebook sources the R script, so the prediction logic and editable paths stay
-in one place. The script can also be run directly without command-line
-arguments:
+`predict_gpr_at_points.R` (paths are relative to `codebase/v2/src`). Run the
+script directly without command-line arguments:
 
 ```bash
 Rscript predict_gpr_at_points.R
 ```
 
-Jupyter may start the R kernel in its server directory (for example,
-`/home/jovyan`) rather than the notebook directory. Startup checks the kernel
-working directory and its ancestors for the v2 source tree, and also checks
-the named clone `Seagrass_carbon_stock_model` beneath the working directory.
-It does not recursively search unrelated folders.
-
-For another mount location, edit `project_path` in the notebook's first cell:
-
-```r
-project_path <- "/home/jovyan/Seagrass_carbon_stock_model"
-```
-
-The path can point to the clone root, `codebase/v2`, or `codebase/v2/src`.
-Alternatively, set the environment variable before running the first cell
-(or before sourcing the R script):
+Alternatively, set `SEAGRASS_V2_ROOT` to the clone root,
+`codebase/v2`, or `codebase/v2/src` before sourcing the script:
 
 ```r
 Sys.setenv(SEAGRASS_V2_ROOT = "/home/jovyan/Seagrass_carbon_stock_model")
@@ -280,10 +264,18 @@ python -m pip install -r requirements.txt
 
 ### Standalone R carbon stock map
 
-`predict_gpr_at_maps.R` predicts **sediment** carbon stock with a saved GPR
-model directly from mapped European seagrass polygons, without retraining or
-running the Python notebook. It follows the saved-model loading,
-covariate-extraction, and prediction flow used by `predict_gpr_at_points.R`.
+`predict_gpr_sg_carbon_stock.ipynb` predicts **sediment** carbon stock with a
+saved GPR model directly from mapped European seagrass polygons, without
+retraining or running the Python notebook. The notebook uses the same
+saved-model loading, covariate-extraction, and prediction workflow as
+`predict_gpr_at_maps.R` and `predict_gpr_at_points.R`.
+
+Configure `model_path`, `meadow_path`, `output_dir`, and `depth_cm` in the
+notebook's first cell, select its R kernel, and run that cell. Paths are
+relative to `codebase/v2/src`. For a different mount location, set
+`project_path` in the first cell to the clone root, `codebase/v2`, or
+`codebase/v2/src`; the notebook otherwise discovers the source tree from the
+kernel working directory and its ancestors.
 
 Restore the existing `renv.lock` environment from `codebase/v2/src`, then run:
 
