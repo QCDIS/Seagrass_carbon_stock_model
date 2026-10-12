@@ -266,9 +266,13 @@ retraining or running the Python notebook. The notebook uses the same
 saved-model loading, covariate-extraction, and prediction workflow as
 `predict_gpr_at_maps.R` and `predict_gpr_at_points.R`.
 
-Configure `model_path`, `meadow_path`, `output_dir`, and `depth_cm` in the
-notebook's first cell, select its R kernel, and run that cell. Paths are
-relative to `codebase/v2/src`. For a different mount location, set
+The notebook defaults to the saved model at `data/review/GPR_final.rds` and
+polygon source at `data/seagrass_eov_poly_2025.csv`. Configure
+`model_path`, `meadow_path`, `output_dir`, and `depth_cm` in the notebook's
+first cell, select its R kernel, and run the prediction cell. Paths are
+relative to `codebase/v2/src`. The CSV is converted in chunks to a cached
+European GeoPackage in the output directory; subsequent runs reuse that cache.
+For a different mount location, set
 `project_path` in the first cell to the clone root, `codebase/v2`, or
 `codebase/v2/src`; the notebook otherwise discovers the source tree from the
 kernel working directory and its ancestors.
@@ -277,8 +281,8 @@ Restore the existing `renv.lock` environment from `codebase/v2/src`, then run:
 
 ```bash
 Rscript predict_gpr_at_maps.R \
-  output/pixel_grouped/final_models/GPR_final.rds \
-  data/seagrass_meadows.gpkg output/pixel_grouped/stocks 100
+  data/review/GPR_final.rds \
+  data/seagrass_eov_poly_2025.csv output/pixel_grouped/stocks 100
 ```
 
 Paths are resolved relative to the calling directory; the script can also be
@@ -287,11 +291,13 @@ invoked by its absolute path. Use `--help` for the argument summary.
 Required inputs:
 
 - A final GPR bundle from `modelling/R/fit_final_models.R`.
-- A single-layer polygon GeoPackage (or another `sf::st_read`-compatible polygon
-  dataset) with a defined CRS. Prepare the downloaded seagrass EOV geometries
-  as polygons with training-compatible category labels, such as
-  `seagrass_species`; raw EOV CSVs and habitat codes are not accepted directly.
-  Restrict the polygons to the model's intended prediction domain and remove
+- The seagrass EOV polygon CSV (`data/seagrass_eov_poly_2025.csv`) or a
+  single-layer polygon GeoPackage (or another `sf::st_read`-compatible polygon
+  dataset) with a defined CRS and training-compatible category labels such as
+  `seagrass_species`. For the CSV, the script derives species from its EOV
+  habitat fields, restricts polygons to the European study bounds, and caches
+  the prepared polygons as `seagrass_meadows_gpr.gpkg` in the output directory.
+  Restrict polygons to the model's intended prediction domain and remove
   overlapping/duplicate meadow records before estimating totals.
 - Environmental NetCDF files in `data/env_rasters/`, as described below. Raster
   predictors are extracted at one point inside each meadow. Non-raster

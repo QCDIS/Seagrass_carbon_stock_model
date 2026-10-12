@@ -1,11 +1,132 @@
 # Predict sediment carbon stocks for mapped European seagrass meadows with GPR.
 # Uses saved-model preprocessing from modelling/R/ml.R; does not refit models.
-# Usage: Rscript predict_gpr_at_maps.R MODEL.rds MEADOWS.gpkg OUTPUT_DIR [DEPTH_CM]
+# Usage: Rscript predict_gpr_at_maps.R MODEL.rds MEADOWS.csv|gpkg OUTPUT_DIR [DEPTH_CM]
+
+prepare_meadow_input <- function(meadow_path, output_dir) {
+  if (!grepl("\\.csv$", meadow_path, ignore.case = TRUE)) {
+    return(normalizePath(meadow_path, mustWork = TRUE))
+  }
+  cache_path <- file.path(output_dir, "seagrass_meadows_gpr.gpkg")
+  if (file.exists(cache_path)) {
+    cat("Using cached meadow polygons:", cache_path, "\n")
+    return(normalizePath(cache_path, mustWork = TRUE))
+  }
+
+  required <- c("habsubtype", "eunis_code", "anxi_name", "geom")
+  header <- readr::read_csv(
+    meadow_path, n_max = 0, show_col_types = FALSE, progress = FALSE
+  )
+  missing_columns <- setdiff(required, names(header))
+  if (length(missing_columns)) {
+    stop(
+      "EOV polygon CSV is missing required column(s): ",
+      paste(missing_columns, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  temporary_path <- tempfile(
+    pattern = "seagrass_meadows_gpr_", tmpdir = output_dir, fileext = ".gpkg"
+  )
+  on.exit(if (file.exists(temporary_path)) unlink(temporary_path), add = TRUE)
+  layer_created <- FALSE
+  callback <- readr::SideEffectChunkCallback$new(function(chunk, position) {
+    habsubtype <- as.character(chunk$habsubtype)
+    eunis_code <- as.character(chunk$eunis_code)
+    anxi_name <- as.character(chunk$anxi_name)
+    species <- rep("Other", nrow(chunk))
+    species[habsubtype %in% c("Cymodocea beds", "Cymodocea nodosa")] <-
+      "Cymodocea nodosa"
+    species[habsubtype %in% c("Dead mattes of Posidonia oceanica", "Posidonia oceanica")] <-
+      "Posidonia oceanica"
+    species[habsubtype %in% c(
+      "Zostera beds", "Zostera marina", "Zostera marina beds",
+      "Zostera marina/angustifolia beds"
+    )] <- "Zostera marina"
+    species[habsubtype %in% c("Zostera noltii", "Zostera noltii beds")] <-
+      "Zostera noltei"
+    species[habsubtype %in% "Unknown"] <- "Unspecified"
+    species[habsubtype %in% "Ruppia beds"] <- "Remove"
+    species[eunis_code %in% c("A5.531", "A5.5312", "A5.5313", "A5.53131", "A5.53132")] <-
+      "Cymodocea nodosa"
+    species[eunis_code %in% c("A5.535", "A5.5352", "A5.5353", "A5.5354", "MB252")] <-
+      "Posidonia oceanica"
+    species[eunis_code %in% c("A5.5331", "A5.533", "A5.5333")] <-
+      "Zostera marina"
+    species[eunis_code %in% c("A2.61", "A2.611", "A2.6111", "A5.5332")] <-
+      "Zostera noltei"
+    species[eunis_code %in% c("A5.53", "MB522")] <- "Unspecified"
+    species[eunis_code %in% c("A5.529", "A5.5343", "A6.61")] <- "Remove"
+    species[anxi_name %in% c("Posidonia beds", "Posidonia oceanica beds")] <-
+      "Posidonia oceanica"
+
+    supported <- species %in% c(
+      "Cymodocea nodosa", "Posidonia oceanica", "Zostera marina",
+      "Zostera noltei", "Unspecified"
+    ) & !is.na(chunk$geom) & nzchar(chunk$geom)
+    if (!any(supported)) return(invisible(NULL))
+
+    chunk <- chunk[supported, , drop = FALSE]
+    geometries <- sf::st_as_sfc(as.character(chunk$geom), crs = 3857)
+    attributes <- data.frame(
+      seagrass_species = species[supported],
+      stringsAsFactors = FALSE
+    )
+    for (column in intersect(c("FID", "id", "habsubtype", "eunis_code", "anxi_name"),
+                             names(chunk))) {
+      attributes[[column]] <- chunk[[column]]
+    }
+    meadows <- sf::st_sf(attributes, geometry = geometries)
+    meadows <- sf::st_transform(meadows, 4326)
+    meadows <- sf::st_crop(
+      meadows,
+      xmin = -8.85, ymin = 34.65, xmax = 33.30, ymax = 60.11
+    )
+    meadows <- meadows[
+      !sf::st_is_empty(meadows) &
+        sf::st_geometry_type(meadows) %in% c("POLYGON", "MULTIPOLYGON"),
+      ,
+      drop = FALSE
+    ]
+    if (!nrow(meadows)) return(invisible(NULL))
+
+    if (!layer_created) {
+      sf::st_write(
+        meadows, temporary_path, layer = "meadows", delete_dsn = TRUE, quiet = TRUE
+      )
+      layer_created <<- TRUE
+    } else {
+      sf::st_write(
+        meadows, temporary_path, layer = "meadows", append = TRUE, quiet = TRUE
+      )
+    }
+    cat("Prepared", nrow(meadows), "European meadow polygon(s) from CSV chunk.\n")
+    invisible(NULL)
+  })
+
+  readr::read_csv_chunked(
+    meadow_path,
+    callback = callback,
+    chunk_size = 10000L,
+    col_select = tidyselect::all_of(required),
+    show_col_types = FALSE,
+    progress = FALSE
+  )
+  if (!layer_created) {
+    stop("No supported seagrass polygons were found in the European study area.")
+  }
+  if (!file.rename(temporary_path, cache_path)) {
+    stop("Could not save prepared meadow polygons to: ", cache_path, call. = FALSE)
+  }
+  cat("Cached prepared meadow polygons at:", cache_path, "\n")
+  normalizePath(cache_path, mustWork = TRUE)
+}
 
 predict_gpr_at_maps <- function(args = commandArgs(trailingOnly = TRUE)) {
   usage <- paste(
-    "Usage: Rscript predict_gpr_at_maps.R MODEL.rds MEADOWS.gpkg OUTPUT_DIR [DEPTH_CM]",
+    "Usage: Rscript predict_gpr_at_maps.R MODEL.rds MEADOWS.csv|gpkg OUTPUT_DIR [DEPTH_CM]",
     "MODEL.rds: trusted GPR final-model bundle produced by modelling/R/fit_final_models.R.",
+    "MEADOWS.csv: seagrass EOV polygon CSV with geom WKT (EPSG:3857);",
     "MEADOWS.gpkg: polygon layer with a CRS and model category columns",
     "(e.g. seagrass_species, using training labels; region can be assigned from MEOW).",
     "Environmental NetCDF inputs must be in codebase/v2/src/data/env_rasters/.",
@@ -49,7 +170,7 @@ predict_gpr_at_maps <- function(args = commandArgs(trailingOnly = TRUE)) {
   setwd(project_root)
   renv::load(project = project_root)
   seagrass_init_repo(
-    packages = c("sf", "ggplot2"),
+    packages = c("sf", "ggplot2", "readr"),
     include_helpers = TRUE,
     source_files = c(
       "modelling/R/extract_covariates_from_rasters.R",
@@ -74,6 +195,11 @@ predict_gpr_at_maps <- function(args = commandArgs(trailingOnly = TRUE)) {
   cat("Predictor variables for raster covariates:\n")
   print(pvars)
 
+  if (!dir.exists(output_dir) &&
+      !dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
+    stop("Could not create output directory: ", output_dir, call. = FALSE)
+  }
+  meadow_path <- prepare_meadow_input(meadow_path, output_dir)
   meadows <- sf::st_read(meadow_path, quiet = TRUE)
   if (!nrow(meadows) || is.na(sf::st_crs(meadows))) {
     stop("MEADOWS must contain features with a defined CRS.")
@@ -153,10 +279,6 @@ predict_gpr_at_maps <- function(args = commandArgs(trailingOnly = TRUE)) {
   meadows$stock_se_Gg <- density_se * depth_cm * 1e4 * area_m2 / 1e9
   meadows$source_model <- basename(model_path)
 
-  if (!dir.exists(output_dir) &&
-      !dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
-    stop("Could not create output directory: ", output_dir, call. = FALSE)
-  }
   sf::st_write(
     meadows, file.path(output_dir, "carbon_stock_predictions.gpkg"),
     layer = "carbon_stock", delete_layer = TRUE, quiet = TRUE

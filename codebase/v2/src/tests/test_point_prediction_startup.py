@@ -11,7 +11,7 @@ import unittest
 
 
 SRC = Path(__file__).resolve().parents[1]
-NOTEBOOK = json.loads((SRC / "predict_gpr_at_points.ipynb").read_text(encoding="utf-8"))
+NOTEBOOK = json.loads((SRC / "predict_gpr_sg_carbon_stock.ipynb").read_text(encoding="utf-8"))
 RSCRIPT = shutil.which("Rscript")
 
 
@@ -19,7 +19,7 @@ def r_string(value):
     return json.dumps(str(value))
 
 
-class PointPredictionStartupTests(unittest.TestCase):
+class MapPredictionNotebookStartupTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="seagrass-startup-")
         self.addCleanup(self.temp.cleanup)
@@ -39,6 +39,13 @@ class PointPredictionStartupTests(unittest.TestCase):
             'stopifnot(identical(Sys.getenv("SEAGRASS_V2_ROOT"), project_root))\n'
             'selected_script <- normalizePath(script_path, winslash = "/")\n',
             encoding="utf-8"
+        )
+        (self.root / "predict_gpr_at_maps.R").write_text(
+            'selected_script <- normalizePath(script_path, winslash = "/")\n'
+            'predict_gpr_at_maps <- function(args) {\n'
+            '  received_prediction_args <<- args\n'
+            '  data.frame(prediction_status = "predicted")\n'
+            '}\n', encoding="utf-8"
         )
         self.env = os.environ.copy()
         self.env.pop("SEAGRASS_V2_ROOT", None)
@@ -127,20 +134,22 @@ class PointPredictionStartupTests(unittest.TestCase):
                     self.notebook_code(explicit)
                     + f"expected <- normalizePath({r_string(self.root)}, winslash = '/')\n"
                     + "stopifnot(identical(project_root, expected),\n"
-                    + "  identical(selected_script, file.path(expected, 'predict_gpr_at_points.R')),\n"
+                    + "  identical(selected_script, file.path(expected, 'predict_gpr_at_maps.R')),\n"
+                    + "  identical(received_prediction_args[[2]], file.path('data', 'seagrass_eov_poly_2025.csv')),\n"
                     + "  is.na(Sys.getenv('SEAGRASS_V2_ROOT', unset = NA_character_)))\n"
                     + "".join(NOTEBOOK["cells"][1]["source"]),
                     cwd=cwd
                 )
                 self.assert_success(result)
 
-    def test_notebook_override_and_environment_restoration(self):
+    def test_notebook_explicit_path_and_environment_unchanged(self):
         self.env["SEAGRASS_V2_ROOT"] = "invalid environment path"
         self.assert_success(self.run_r(
             self.notebook_code(self.clone)
-            + "stopifnot(Sys.getenv('SEAGRASS_V2_ROOT') == 'invalid environment path')\n"
+            + "stopifnot(Sys.getenv('SEAGRASS_V2_ROOT') == 'invalid environment path',\n"
+            + "  identical(selected_script, normalizePath(file.path(project_root, 'predict_gpr_at_maps.R'), winslash = '/')))\n"
         ))
-        (self.root / "predict_gpr_at_points.R").write_text(
+        (self.root / "predict_gpr_at_maps.R").write_text(
             'stop("prediction failure", call. = FALSE)\n', encoding="utf-8"
         )
         self.assert_success(self.run_r(
@@ -185,7 +194,7 @@ class PointPredictionStartupTests(unittest.TestCase):
         result = self.run_r("source('predict_gpr_at_points.R')\n", cwd=self.root)
         self.assertIn("STARTUP_OK:" + self.root.as_posix(), result.stderr)
         result = self.run_r(self.notebook_code(), cwd=self.home)
-        self.assertIn("STARTUP_OK:" + self.root.as_posix(), result.stderr)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         result = subprocess.run(
             [RSCRIPT, "--vanilla", str(self.root / "predict_gpr_at_points.R")],
             cwd=unrelated, env=self.env, capture_output=True, text=True,
