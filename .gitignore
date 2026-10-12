@@ -53,3 +53,8 @@ rsconnect/
 
 # .env file used by secretsProvider
 .env
+
+codebase/v2/src/data/env_rasters/
+codebase/v2/src/data/*.zip
+codebase/v2/src/data/*.csv
+codebase/v2/src/output/

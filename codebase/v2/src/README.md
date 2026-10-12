@@ -280,7 +280,7 @@ python -m pip install -r requirements.txt
 
 ## Environmental data
 
-The NetCDF raster files containing environmental covariates (from remote sensing and re-analysis products) are stored via Zenodo (persistent identifier: [https://doi.org/10.5281/zenodo.19329403](https://doi.org/10.5281/zenodo.19329403)). Download and place all `.nc` files under `data/env_rasters/`. The pipeline will auto-discover these covariates at runtime via the `build_covariate_config_from_dir` function in `modelling/R/extract_covariates_from_rasters.R`.
+The NetCDF raster files containing environmental covariates (from remote sensing and re-analysis products) are stored via Zenodo (persistent identifier: [https://doi.org/10.5281/zenodo.19329403](https://doi.org/10.5281/zenodo.19329403)). Download and place all `.nc` files under `data/env_rasters/`, relative to the v2 project root (`codebase/v2/src`), not the Git repository root. The pipeline will auto-discover these covariates at runtime via the `build_covariate_config_from_dir` function in `modelling/R/extract_covariates_from_rasters.R`. Raster discovery and extraction resolve these relative paths using `seagrass_project_root()` from the repository bootstrap.
 
 ## Regions data
 
