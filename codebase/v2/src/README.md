@@ -278,6 +278,54 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+### Standalone R carbon stock map
+
+`predict_carbon_stock_map.R` predicts **sediment** carbon stock directly from a
+trusted final-model RDS bundle and mapped European seagrass polygons, without
+retraining or running the Python notebook.
+
+Restore the existing `renv.lock` environment from `codebase/v2/src`, then run:
+
+```bash
+Rscript predict_carbon_stock_map.R \
+  output/pixel_grouped/final_models/GPR_final.rds \
+  data/seagrass_meadows.gpkg output/pixel_grouped/stocks 100
+```
+
+Paths are resolved relative to the calling directory; the script can also be
+invoked by its absolute path. Use `--help` for the argument summary.
+
+Required inputs:
+
+- A final GPR, GAM, XGB or LR bundle from `modelling/R/fit_final_models.R`.
+- A single-layer polygon GeoPackage (or another `sf::st_read`-compatible polygon
+  dataset) with a defined CRS. Prepare the downloaded seagrass EOV geometries
+  as polygons with training-compatible category labels, such as
+  `seagrass_species`; raw EOV CSVs and habitat codes are not accepted directly.
+  Restrict the polygons to the model's intended prediction domain and remove
+  overlapping/duplicate meadow records before estimating totals.
+- Environmental NetCDF files in `data/env_rasters/`, as described below. Raster
+  predictors are extracted at one point inside each meadow. Non-raster
+  predictors must be meadow attributes; missing `region` values are assigned
+  using `data/MEOW/meow_ecos.shp` if the model requires them.
+
+The script reuses saved scaling, categorical encoding and log-response
+back-transformation. It writes `carbon_stock_map.png` (kg C/ha),
+`carbon_stock_predictions.gpkg`, and `carbon_stock_predictions.csv`. Tables
+include carbon density (g C/cm³), area (m²), stock (kg C/ha and Gg C per meadow),
+available prediction SEs, and a status for every meadow. Missing covariates,
+unseen categories, and invalid/negative predictions remain missing rather
+than being imputed or silently assigned another species.
+
+Stock conversion uses `density × depth_cm × 1e5` for kg C/ha and
+`density × depth_cm × 1e4 × area_m2 / 1e9` for Gg C, matching the notebook.
+Depth defaults to 100 cm and **must match the model's target depth**. Areas use
+the European equal-area CRS EPSG:3035. A single representative-point prediction
+is assumed uniform within each meadow, so large heterogeneous polygons should
+be subdivided before prediction. No nearest-valid coastal filling is performed.
+SEs cover model prediction uncertainty only, not meadow extent, depth or
+within-meadow variability; log-model SEs use the existing delta approximation.
+
 ## Environmental data
 
 The NetCDF raster files containing environmental covariates (from remote sensing and re-analysis products) are stored via Zenodo (persistent identifier: [https://doi.org/10.5281/zenodo.19329403](https://doi.org/10.5281/zenodo.19329403)). Download and place all `.nc` files under `data/env_rasters/`. The pipeline will auto-discover these covariates at runtime via the `build_covariate_config_from_dir` function in `modelling/R/extract_covariates_from_rasters.R`.
