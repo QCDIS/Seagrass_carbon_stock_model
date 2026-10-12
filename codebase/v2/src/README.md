@@ -280,14 +280,15 @@ python -m pip install -r requirements.txt
 
 ### Standalone R carbon stock map
 
-`predict_carbon_stock_map.R` predicts **sediment** carbon stock directly from a
-trusted final-model RDS bundle and mapped European seagrass polygons, without
-retraining or running the Python notebook.
+`predict_gpr_at_maps.R` predicts **sediment** carbon stock with a saved GPR
+model directly from mapped European seagrass polygons, without retraining or
+running the Python notebook. It follows the saved-model loading,
+covariate-extraction, and prediction flow used by `predict_gpr_at_points.R`.
 
 Restore the existing `renv.lock` environment from `codebase/v2/src`, then run:
 
 ```bash
-Rscript predict_carbon_stock_map.R \
+Rscript predict_gpr_at_maps.R \
   output/pixel_grouped/final_models/GPR_final.rds \
   data/seagrass_meadows.gpkg output/pixel_grouped/stocks 100
 ```
@@ -297,7 +298,7 @@ invoked by its absolute path. Use `--help` for the argument summary.
 
 Required inputs:
 
-- A final GPR, GAM, XGB or LR bundle from `modelling/R/fit_final_models.R`.
+- A final GPR bundle from `modelling/R/fit_final_models.R`.
 - A single-layer polygon GeoPackage (or another `sf::st_read`-compatible polygon
   dataset) with a defined CRS. Prepare the downloaded seagrass EOV geometries
   as polygons with training-compatible category labels, such as

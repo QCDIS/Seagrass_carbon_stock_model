@@ -1,11 +1,11 @@
-# Predict sediment carbon stocks for mapped European seagrass meadows.
-# Uses final-model preprocessing from modelling/R/ml.R; does not refit models.
-# Usage: Rscript predict_carbon_stock_map.R MODEL.rds MEADOWS.gpkg OUTPUT_DIR [DEPTH_CM]
+# Predict sediment carbon stocks for mapped European seagrass meadows with GPR.
+# Uses saved-model preprocessing from modelling/R/ml.R; does not refit models.
+# Usage: Rscript predict_gpr_at_maps.R MODEL.rds MEADOWS.gpkg OUTPUT_DIR [DEPTH_CM]
 
-predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
+predict_gpr_at_maps <- function(args = commandArgs(trailingOnly = TRUE)) {
   usage <- paste(
-    "Usage: Rscript predict_carbon_stock_map.R MODEL.rds MEADOWS.gpkg OUTPUT_DIR [DEPTH_CM]",
-    "MODEL.rds: trusted final-model bundle produced by modelling/R/fit_final_models.R.",
+    "Usage: Rscript predict_gpr_at_maps.R MODEL.rds MEADOWS.gpkg OUTPUT_DIR [DEPTH_CM]",
+    "MODEL.rds: trusted GPR final-model bundle produced by modelling/R/fit_final_models.R.",
     "MEADOWS.gpkg: polygon layer with a CRS and model category columns",
     "(e.g. seagrass_species, using training labels; region can be assigned from MEOW).",
     "Environmental NetCDF inputs must be in codebase/v2/src/data/env_rasters/.",
@@ -20,7 +20,12 @@ predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
   if (!length(args) %in% c(3L, 4L)) stop(usage, call. = FALSE)
   model_path <- normalizePath(args[[1]], mustWork = TRUE)
   meadow_path <- normalizePath(args[[2]], mustWork = TRUE)
-  output_dir <- if (startsWith(args[[3]], "/")) args[[3]] else file.path(getwd(), args[[3]])
+  output_dir <- if (grepl("^([A-Za-z]:[/\\\\]|[/\\\\]{2})", args[[3]]) ||
+                    startsWith(args[[3]], "/")) {
+    args[[3]]
+  } else {
+    file.path(getwd(), args[[3]])
+  }
   output_dir <- normalizePath(output_dir, mustWork = FALSE)
   depth_cm <- if (length(args) == 4L) suppressWarnings(as.numeric(args[[4]])) else 100
   if (!is.finite(depth_cm) || depth_cm <= 0) {
@@ -56,16 +61,18 @@ predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
 
   obj <- readRDS(model_path)
   if (!is.list(obj) || is.null(obj$model)) stop("MODEL.rds must contain a fitted model bundle.")
-  pvars <- obj$predictor_vars %||% obj$best_covariate_set
+  model_type <- infer_model_type(obj)
+  if (!identical(model_type, "GPR")) {
+    stop("The model file does not contain a GPR model: ", model_path, call. = FALSE)
+  }
+  pvars <- obj$predictor_vars
   if (!is.character(pvars) || !length(pvars) || anyNA(pvars) ||
       any(!nzchar(pvars)) || anyDuplicated(pvars)) {
     stop("The model bundle must contain unique predictor_vars.")
   }
   obj$predictor_vars <- pvars
-  # Final LR bundles contain an lm object, which the shared type inference misses.
-  if (is.null(obj$model_type) && inherits(obj$model, "lm") && !inherits(obj$model, "gam")) {
-    obj$model_type <- "LR"
-  }
+  cat("Predictor variables for raster covariates:\n")
+  print(pvars)
 
   meadows <- sf::st_read(meadow_path, quiet = TRUE)
   if (!nrow(meadows) || is.na(sf::st_crs(meadows))) {
@@ -106,9 +113,6 @@ predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
   }
   status <- ifelse(valid, "predicted", "missing_covariates")
   category_levels <- obj$encoding$levels
-  if (is.null(category_levels) && inherits(obj$model, "lm")) {
-    category_levels <- obj$model$xlevels
-  }
   category_levels <- category_levels %||% list()
   for (v in intersect(names(category_levels), pvars)) {
     unknown <- !is.na(newdata[[v]]) & !as.character(newdata[[v]]) %in% category_levels[[v]]
@@ -149,7 +153,10 @@ predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
   meadows$stock_se_Gg <- density_se * depth_cm * 1e4 * area_m2 / 1e9
   meadows$source_model <- basename(model_path)
 
-  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  if (!dir.exists(output_dir) &&
+      !dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
+    stop("Could not create output directory: ", output_dir, call. = FALSE)
+  }
   sf::st_write(
     meadows, file.path(output_dir, "carbon_stock_predictions.gpkg"),
     layer = "carbon_stock", delete_layer = TRUE, quiet = TRUE
@@ -178,4 +185,4 @@ predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
   invisible(meadows)
 }
 
-if (sys.nframe() == 0L) predict_carbon_stock_map()
+if (sys.nframe() == 0L) predict_gpr_at_maps()
