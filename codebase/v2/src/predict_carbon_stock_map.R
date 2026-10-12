@@ -37,6 +37,12 @@ predict_carbon_stock_map <- function(args = commandArgs(trailingOnly = TRUE)) {
   source(init_path)
   old_wd <- getwd()
   on.exit(setwd(old_wd), add = TRUE)
+  project_root <- dirname(dirname(dirname(normalizePath(init_path, mustWork = TRUE))))
+  if (!requireNamespace("renv", quietly = TRUE)) {
+    stop("Package 'renv' is required; restore the codebase/v2/src/renv.lock environment first.")
+  }
+  setwd(project_root)
+  renv::load(project = project_root)
   seagrass_init_repo(
     packages = c("sf", "ggplot2"),
     include_helpers = TRUE,
