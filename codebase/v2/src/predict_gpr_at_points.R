@@ -110,6 +110,8 @@ inspect_nc_file <- function(nc_path) {
 }
 
 build_covariate_config_from_dir <- function(raster_dir, covariates) {
+  requested <- unique(tolower(covariates))
+  if (length(requested) == 0L) return(list())
   base <- file.path(PROJECT_ROOT, raster_dir)
   if (!dir.exists(base)) stop("Raster directory not found: ", base)
   files <- list.files(base, pattern = "[.]nc$", full.names = TRUE, ignore.case = TRUE)
@@ -119,7 +121,6 @@ build_covariate_config_from_dir <- function(raster_dir, covariates) {
   if (anyDuplicated(file_names)) {
     stop("Raster filenames are ambiguous after normalization in: ", base, call. = FALSE)
   }
-  requested <- unique(tolower(covariates))
   missing <- setdiff(requested, file_names)
   if (length(missing) > 0L) {
     stop(
@@ -363,7 +364,7 @@ predict_model <- function(obj, newdata, se = RETURN_PREDICTION_SE) {
 
 PROJECT_ROOT <- seagrass_find_v2_root()
 
-REQUIRED_PACKAGES <- c("GauPro", "RNetCDF", "readr", "terra")
+REQUIRED_PACKAGES <- c("GauPro", "readr")
 missing_packages <- REQUIRED_PACKAGES[
   !vapply(REQUIRED_PACKAGES, requireNamespace, logical(1), quietly = TRUE)
 ]
@@ -416,6 +417,20 @@ POINT_DATA_COLUMNS <- unique(c(
 ))
 POINT_DATA <- input_data[, POINT_DATA_COLUMNS, drop = FALSE]
 RASTER_COVARIATES <- setdiff(PREDICTOR_VARS, names(POINT_DATA))
+if (length(RASTER_COVARIATES) > 0L) {
+  RASTER_PACKAGES <- c("RNetCDF", "terra")
+  missing_packages <- RASTER_PACKAGES[
+    !vapply(RASTER_PACKAGES, requireNamespace, logical(1), quietly = TRUE)
+  ]
+  if (length(missing_packages) > 0L) {
+    stop(
+      "Missing required package(s) for raster extraction: ",
+      paste(missing_packages, collapse = ", "),
+      ". Restore the v2 renv environment or install these packages.",
+      call. = FALSE
+    )
+  }
+}
 RASTER_CONFIG <- build_covariate_config_from_dir(RASTER_DIR, RASTER_COVARIATES)
 
 cat("Extracting environmental covariates for", nrow(input_data), "point(s)...\n")
