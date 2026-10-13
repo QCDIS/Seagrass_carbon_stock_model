@@ -3,6 +3,29 @@
 # This script includes the functions it needs from the v2 project, so it can be
 # run or sourced without sourcing the modelling helper scripts.
 
+# User configuration (paths are relative to the v2 project root).
+INPUT_FILE <- file.path("data", "review", "PercOC_only_unique_reduced_df_predictions.csv")
+MODEL_FILE <- file.path("data", "review", "GPR_final.rds")
+OUTPUT_FILE <- file.path(
+  "output", "review",
+  "PercOC_only_unique_reduced_df_predictions_gpr_predictions.csv"
+)
+RASTER_DIR <- file.path("data", "env_rasters")
+POINT_COLUMNS <- c("longitude", "latitude", "seagrass_species")
+USE_CLOSEST_RASTER_VALUE <- TRUE
+RASTER_METHOD <- "nearest"
+RETURN_PREDICTION_SE <- TRUE
+PREDICTION_MEAN_COLUMN <- "predicted_carbon_density"
+PREDICTION_SE_COLUMN <- "predicted_se"
+RS_COVARIATES <- c(
+  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.CHL.chlor_a.4km",
+  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.IOP.adg_443.4km",
+  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.IOP.bbp_443.4km",
+  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.KD.Kd_490.4km",
+  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.RRS.Rrs_443.4km",
+  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.RRS.Rrs_620.4km"
+)
+
 seagrass_find_v2_root <- function(start_dirs = getwd(),
                                   project_path = Sys.getenv("SEAGRASS_V2_ROOT", "")) {
   if (!is.character(project_path) || length(project_path) != 1L ||
@@ -81,43 +104,62 @@ inspect_nc_file <- function(nc_path) {
     lat_dims <- grep("lat", dim_names, ignore.case = TRUE)
     lon_dims <- grep("lon", dim_names, ignore.case = TRUE)
     if (length(lat_dims) == 0L || length(lon_dims) == 0L) next
-    return(list(
-      varname = variable$name,
-      lat_var = dim_names[lat_dims[1L]],
-      lon_var = dim_names[lon_dims[1L]]
-    ))
+    return(variable$name)
   }
   NULL
 }
 
-build_covariate_config_from_dir <- function(raster_dir = RASTER_DIR) {
-  base <- file.path(project_root, raster_dir)
+build_covariate_config_from_dir <- function(raster_dir, covariates) {
+  base <- file.path(PROJECT_ROOT, raster_dir)
   if (!dir.exists(base)) stop("Raster directory not found: ", base)
-  files <- list.files(base, pattern = "[.]nc$", full.names = FALSE)
+  files <- list.files(base, pattern = "[.]nc$", full.names = TRUE, ignore.case = TRUE)
+  file_names <- tolower(gsub(
+    "-", "_", sub("[.]nc$", "", basename(files), ignore.case = TRUE), fixed = TRUE
+  ))
+  if (anyDuplicated(file_names)) {
+    stop("Raster filenames are ambiguous after normalization in: ", base, call. = FALSE)
+  }
+  requested <- unique(tolower(covariates))
+  missing <- setdiff(requested, file_names)
+  if (length(missing) > 0L) {
+    stop(
+      "No NetCDF raster found for required covariate(s): ",
+      paste(missing, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
   out <- list()
-  for (file in files) {
+  for (covariate in requested) {
+    file <- files[match(covariate, file_names)]
     info <- tryCatch(
-      inspect_nc_file(file.path(base, file)),
+      inspect_nc_file(file),
       error = function(e) {
-        warning("Skipping ", file, ": ", conditionMessage(e))
-        NULL
+        stop(
+          "Could not inspect raster for ", covariate, ": ",
+          conditionMessage(e),
+          call. = FALSE
+        )
       }
     )
-    if (is.null(info)) next
-    name <- tolower(gsub("-", "_", sub("[.]nc$", "", file), fixed = TRUE))
-    out[[name]] <- list(
-      file = file.path(raster_dir, file),
-      varname = info$varname,
-      lat_var = info$lat_var,
-      lon_var = info$lon_var
+    if (is.null(info)) {
+      stop(
+        "No 2D latitude/longitude variable found in raster: ", basename(file),
+        call. = FALSE
+      )
+    }
+    out[[covariate]] <- list(
+      file = file.path(raster_dir, basename(file)),
+      varname = info
     )
   }
   out
 }
 
-extract_from_nc <- function(nc_file, varname, points, use_closest = TRUE,
-                            method = "nearest") {
-  nc_path <- file.path(project_root, nc_file)
+extract_from_nc <- function(nc_file, varname, coords,
+                            use_closest = USE_CLOSEST_RASTER_VALUE,
+                            method = RASTER_METHOD) {
+  nc_path <- file.path(PROJECT_ROOT, nc_file)
   if (!file.exists(nc_path)) stop("NetCDF file not found: ", nc_path)
   raster <- terra::rast(nc_path)
   if (!is.null(varname) && nzchar(varname) && varname %in% names(raster)) {
@@ -129,10 +171,6 @@ extract_from_nc <- function(nc_file, varname, points, use_closest = TRUE,
     )
     raster <- raster[[1L]]
   }
-  if (!all(c("longitude", "latitude") %in% names(points))) {
-    stop("points must have 'latitude' and 'longitude' columns")
-  }
-  coords <- cbind(points$longitude, points$latitude)
   terra_method <- if (identical(tolower(method), "bilinear")) "bilinear" else "simple"
   values <- as.numeric(terra::extract(raster, coords, method = terra_method)[, 1L])
   if (use_closest && anyNA(values) && requireNamespace("FNN", quietly = TRUE)) {
@@ -140,33 +178,36 @@ extract_from_nc <- function(nc_file, varname, points, use_closest = TRUE,
     raster_values <- terra::values(raster, mat = FALSE)
     valid_cells <- which(!is.na(raster_values))
     if (length(valid_cells) > 0L) {
-      valid_xy <- terra::xyFromCell(raster, valid_cells)
+      valid_values <- raster_values[valid_cells]
       nearest <- FNN::get.knnx(
-        data = valid_xy,
+        data = terra::xyFromCell(raster, valid_cells),
         query = coords[missing, , drop = FALSE],
         k = 1L
       )$nn.index[, 1L]
-      values[missing] <- raster_values[valid_cells][nearest]
+      values[missing] <- valid_values[nearest]
     }
   }
   values
 }
 
-extract_covariates_at_points <- function(points, covariates = names(RASTER_CONFIG),
-                                         use_closest = TRUE, method = "nearest") {
+extract_covariates_at_points <- function(points, covariates,
+                                         use_closest = USE_CLOSEST_RASTER_VALUE,
+                                         method = RASTER_METHOD) {
+  if (length(covariates) == 0L) return(points)
   if (!all(c("latitude", "longitude") %in% names(points))) {
     stop("points must have 'latitude' and 'longitude' columns")
   }
+  coords <- as.matrix(points[, c("longitude", "latitude"), drop = FALSE])
   result <- points
-  for (covariate in tolower(covariates)) {
-    config <- RASTER_CONFIG[[covariate]]
+  for (covariate in covariates) {
+    config <- RASTER_CONFIG[[tolower(covariate)]]
     if (is.null(config)) {
       stop("Raster configuration not found for covariate: ", covariate)
     }
     result[[covariate]] <- extract_from_nc(
       nc_file = config$file,
       varname = config$varname,
-      points = points,
+      coords = coords,
       use_closest = use_closest,
       method = method
     )
@@ -174,17 +215,8 @@ extract_covariates_at_points <- function(points, covariates = names(RASTER_CONFI
   result
 }
 
-process_rs_covariates <- function(dat, rs_covariates = c(
-  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.CHL.chlor_a.4km",
-  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.IOP.adg_443.4km",
-  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.IOP.bbp_443.4km",
-  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.KD.Kd_490.4km",
-  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.RRS.Rrs_443.4km",
-  "S3A_OLCI_ERRNT.20160425_20241231.L3m.CU.RRS.Rrs_620.4km"
-)) {
-  existing_vars <- intersect(rs_covariates, colnames(dat))
-  if (length(existing_vars) == 0L) return(dat)
-  dat <- as.data.frame(dat)
+process_rs_covariates <- function(dat) {
+  existing_vars <- intersect(RS_COVARIATES, colnames(dat))
   for (variable in existing_vars) {
     if (is.numeric(dat[[variable]])) {
       dat[[variable]] <- pmax(dat[[variable]], 0, na.rm = FALSE)
@@ -204,11 +236,7 @@ normalize_scale_params <- function(sp) {
   NULL
 }
 
-get_species_fixed_vars <- function(predictor_vars) {
-  intersect(predictor_vars, "seagrass_species")
-}
-
-apply_scaling <- function(data, scale_params, predictor_vars = NULL) {
+apply_scaling <- function(data, scale_params) {
   data <- as.data.frame(data)
   for (variable in names(scale_params$means)) {
     if (variable %in% names(data)) {
@@ -264,62 +292,47 @@ lookup_species_means <- function(species_means, species_vec, fallback = 0) {
   result
 }
 
-infer_model_type <- function(obj) {
-  if (!is.null(obj$model_type)) return(obj$model_type)
-  if (inherits(obj$model, "GauPro")) return("GPR")
-  stop("Could not infer model type from object.")
-}
-
-inverse_response_transform <- function(pred, log = TRUE) {
-  if (!log) return(pred)
-  exp(pred)
-}
-
-predict_model <- function(obj, newdata, se = TRUE) {
-  if (!identical(infer_model_type(obj), "GPR")) {
+predict_model <- function(obj, newdata, se = RETURN_PREDICTION_SE) {
+  if (!identical(obj$model_type, "GPR") && !inherits(obj$model, "GauPro")) {
     stop("predict_model in this script only supports GPR models.", call. = FALSE)
   }
   predictor_vars <- obj$predictor_vars
   if (is.null(predictor_vars) || length(predictor_vars) == 0L) {
     stop("The GPR model does not contain predictor_vars.", call. = FALSE)
   }
+  missing_predictors <- setdiff(predictor_vars, names(newdata))
+  if (length(missing_predictors) > 0L) {
+    stop(
+      "Prediction data is missing model predictor(s): ",
+      paste(missing_predictors, collapse = ", "),
+      call. = FALSE
+    )
+  }
   X <- newdata[, predictor_vars, drop = FALSE]
   model_cols <- obj$encoded_names %||% predictor_vars
-  if (!is.null(obj$encoding)) {
-    encoding_type <- obj$encoding$type %||% NA_character_
-    if (identical(encoding_type, "one_hot") &&
-        !is.null(obj$species_means) &&
-        !is.null(obj$encoding$kernel_predictor_vars)) {
-      encoding_type <- "gpr_species_adjusted"
-    }
-    if (identical(encoding_type, "gpr_species_adjusted")) {
-      kernel_vars <- obj$encoding$kernel_predictor_vars %||%
-        setdiff(predictor_vars, get_species_fixed_vars(predictor_vars))
-      X <- newdata[, kernel_vars, drop = FALSE]
-      X <- prepare_predictors_new_onehot(X, obj$encoding, model_cols)
-      scale_params <- normalize_scale_params(obj$scale_params)
-      if (!is.null(scale_params) && length(scale_params$means) > 0L) {
-        X <- apply_scaling(X, scale_params, model_cols)
-      }
-    } else if (identical(encoding_type, "one_hot")) {
-      X <- prepare_predictors_new_onehot(X, obj$encoding, model_cols)
-      scale_params <- normalize_scale_params(obj$scale_params)
-      if (!is.null(scale_params) && length(scale_params$means) > 0L) {
-        X <- apply_scaling(X, scale_params, model_cols)
-      }
-    } else {
-      X <- apply_categorical_encoding(X, obj$encoding, predictor_vars)
-      scale_params <- normalize_scale_params(obj$scale_params)
-      if (!is.null(scale_params) && length(scale_params$means) > 0L) {
-        X <- apply_scaling(X, scale_params, model_cols)
-      }
-    }
-  } else {
-    scale_params <- normalize_scale_params(obj$scale_params)
-    if (!is.null(scale_params) && length(scale_params$means) > 0L) {
-      X <- apply_scaling(X, scale_params, model_cols)
-    }
+  encoding <- obj$encoding
+  encoding_type <- encoding$type %||% NA_character_
+  if (identical(encoding_type, "one_hot") &&
+      !is.null(obj$species_means) &&
+      !is.null(encoding$kernel_predictor_vars)) {
+    encoding_type <- "gpr_species_adjusted"
   }
+  if (identical(encoding_type, "gpr_species_adjusted")) {
+    kernel_vars <- encoding$kernel_predictor_vars %||%
+      setdiff(predictor_vars, "seagrass_species")
+    X <- prepare_predictors_new_onehot(
+      newdata[, kernel_vars, drop = FALSE], encoding, model_cols
+    )
+  } else if (identical(encoding_type, "one_hot")) {
+    X <- prepare_predictors_new_onehot(X, encoding, model_cols)
+  } else if (!is.null(encoding)) {
+    X <- apply_categorical_encoding(X, encoding, predictor_vars)
+  }
+  scale_params <- normalize_scale_params(obj$scale_params)
+  if (!is.null(scale_params) && length(scale_params$means) > 0L) {
+    X <- apply_scaling(X, scale_params)
+  }
+
   X_mat <- as.matrix(X[, model_cols, drop = FALSE])
   storage.mode(X_mat) <- "double"
   pred_out <- obj$model$pred(X_mat, se.fit = se, return_df = TRUE)
@@ -331,7 +344,7 @@ predict_model <- function(obj, newdata, se = TRUE) {
   } else {
     out <- list(mean = as.numeric(pred_out), se = NULL)
   }
-  species_var <- obj$encoding$species_var %||% NULL
+  species_var <- encoding$species_var %||% NULL
   if (!is.null(obj$species_means) && !is.null(species_var) &&
       species_var %in% names(newdata)) {
     species_adjustment <- lookup_species_means(
@@ -342,18 +355,17 @@ predict_model <- function(obj, newdata, se = TRUE) {
     out$mean <- out$mean + species_adjustment
   }
   if (isTRUE(obj$log_response)) {
-    out$mean <- inverse_response_transform(out$mean, log = TRUE)
+    out$mean <- exp(out$mean)
     if (!is.null(out$se)) out$se <- out$se * out$mean
   }
   out
 }
 
-project_root <- seagrass_find_v2_root()
-setwd(project_root)
+PROJECT_ROOT <- seagrass_find_v2_root()
 
-required_packages <- c("GauPro", "RNetCDF", "readr", "terra")
-missing_packages <- required_packages[
-  !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
+REQUIRED_PACKAGES <- c("GauPro", "RNetCDF", "readr", "terra")
+missing_packages <- REQUIRED_PACKAGES[
+  !vapply(REQUIRED_PACKAGES, requireNamespace, logical(1), quietly = TRUE)
 ]
 if (length(missing_packages) > 0L) {
   stop(
@@ -362,39 +374,34 @@ if (length(missing_packages) > 0L) {
     call. = FALSE
   )
 }
-if (!requireNamespace("readxl", quietly = TRUE)) {
-  stop("Package 'readxl' is required. Restore the v2 renv environment.", call. = FALSE)
-}
 
-RASTER_DIR <- file.path("data", "env_rasters")
-RASTER_CONFIG <- build_covariate_config_from_dir(RASTER_DIR)
+INPUT_PATH <- file.path(PROJECT_ROOT, INPUT_FILE)
+MODEL_PATH <- file.path(PROJECT_ROOT, MODEL_FILE)
+OUTPUT_PATH <- file.path(PROJECT_ROOT, OUTPUT_FILE)
+if (!file.exists(INPUT_PATH)) stop("Input file not found: ", INPUT_PATH, call. = FALSE)
+if (!file.exists(MODEL_PATH)) stop("GPR model file not found: ", MODEL_PATH, call. = FALSE)
 
-# Configure these project-root-relative paths before running the script.
-input_path <- file.path("data", "review", "PercOC_only_unique_reduced_df_predictions.csv")
-model_path <- file.path("data", "review", "GPR_final.rds")
-output_path <- file.path(
-  "output",
-  "review",
-  "PercOC_only_unique_reduced_df_predictions_gpr_predictions.csv"
-)
-
-input_path <- file.path(project_root, input_path)
-model_path <- file.path(project_root, model_path)
-output_path <- file.path(project_root, output_path)
-
-if (!file.exists(input_path)) stop("Input file not found: ", input_path, call. = FALSE)
-if (!file.exists(model_path)) stop("GPR model file not found: ", model_path, call. = FALSE)
-
-if (grepl("\\.xlsx?$", input_path, ignore.case = TRUE)) {
-  input_data <- readxl::read_excel(input_path, sheet = 1)
-} else if (grepl("\\.csv$", input_path, ignore.case = TRUE)) {
-  input_data <- readr::read_csv(input_path, show_col_types = FALSE)
+if (grepl("\\.xlsx?$", INPUT_PATH, ignore.case = TRUE)) {
+  if (!requireNamespace("readxl", quietly = TRUE)) {
+    stop("Package 'readxl' is required for Excel input.", call. = FALSE)
+  }
+  input_data <- readxl::read_excel(INPUT_PATH, sheet = 1)
+} else if (grepl("\\.csv$", INPUT_PATH, ignore.case = TRUE)) {
+  input_data <- readr::read_csv(INPUT_PATH, show_col_types = FALSE)
 } else {
-  stop("Input must be a .csv, .xls, or .xlsx file: ", input_path, call. = FALSE)
+  stop("Input must be a .csv, .xls, or .xlsx file: ", INPUT_PATH, call. = FALSE)
 }
 
-required_columns <- c("longitude", "latitude", "seagrass_species")
-missing_columns <- setdiff(required_columns, names(input_data))
+model <- readRDS(MODEL_PATH)
+if (!identical(model$model_type, "GPR") && !inherits(model$model, "GauPro")) {
+  stop("The model file does not contain a GPR model: ", MODEL_PATH, call. = FALSE)
+}
+PREDICTOR_VARS <- model$predictor_vars
+if (is.null(PREDICTOR_VARS) || length(PREDICTOR_VARS) == 0L) {
+  stop("The GPR model does not contain predictor_vars.", call. = FALSE)
+}
+
+missing_columns <- setdiff(POINT_COLUMNS, names(input_data))
 if (length(missing_columns) > 0L) {
   stop(
     "Input data is missing required column(s): ",
@@ -403,65 +410,25 @@ if (length(missing_columns) > 0L) {
   )
 }
 
-model <- readRDS(model_path)
-if (!identical(infer_model_type(model), "GPR")) {
-  stop("The model file does not contain a GPR model: ", model_path, call. = FALSE)
-}
-
-predictor_vars <- model$predictor_vars
-if (is.null(predictor_vars) || length(predictor_vars) == 0L) {
-  stop("The GPR model does not contain predictor_vars.", call. = FALSE)
-}
-print("Predictor variables for raster covariates:")
-print(predictor_vars)
-
-raster_covars <- setdiff(
-  predictor_vars,
-  c("seagrass_species", "longitude", "latitude")
-)
-print("Raster covariates required by the model:")
-print(raster_covars)
-
-# missing_input_predictors <- setdiff(
-#   tolower(predictor_vars),
-#   tolower(c(names(input_data), raster_covars))
-# )
-# if (length(missing_input_predictors) > 0L) {
-#   print("Missing input predictors:")
-#   print(missing_input_predictors)
-#   stop(
-#     "Input is missing non-raster model predictor(s): ",
-#     paste(missing_input_predictors, collapse = ", "),
-#     call. = FALSE
-#   )
-# }
-
-# missing_rasters <- setdiff(
-#   tolower(raster_covars), 
-#   tolower(raster_covariates)
-# )
-# if (length(missing_rasters) > 0L) {
-#   print("Missing raster covariates:")
-#   print(missing_rasters)
-#   stop(
-#     "Model requires raster covariate(s) not found under data/env_rasters: ",
-#     paste(missing_rasters, collapse = ", "),
-#     call. = FALSE
-#   )
-# }
+POINT_DATA_COLUMNS <- unique(c(
+  POINT_COLUMNS,
+  intersect(PREDICTOR_VARS, names(input_data))
+))
+POINT_DATA <- input_data[, POINT_DATA_COLUMNS, drop = FALSE]
+RASTER_COVARIATES <- setdiff(PREDICTOR_VARS, names(POINT_DATA))
+RASTER_CONFIG <- build_covariate_config_from_dir(RASTER_DIR, RASTER_COVARIATES)
 
 cat("Extracting environmental covariates for", nrow(input_data), "point(s)...\n")
-prediction_data <- extract_covariates_at_points(
-  points = input_data[, required_columns, drop = FALSE],
-  covariates = raster_covars,
-  use_closest = TRUE
+PREDICTION_DATA <- extract_covariates_at_points(
+  points = POINT_DATA,
+  covariates = RASTER_COVARIATES
 )
-prediction_data <- process_rs_covariates(prediction_data)
+PREDICTION_DATA <- process_rs_covariates(PREDICTION_DATA)
 
-missing_values <- raster_covars[
+missing_values <- RASTER_COVARIATES[
   vapply(
-    raster_covars,
-    function(variable) any(is.na(prediction_data[[variable]])),
+    RASTER_COVARIATES,
+    function(variable) any(is.na(PREDICTION_DATA[[variable]])),
     logical(1)
   )
 ]
@@ -474,17 +441,19 @@ if (length(missing_values) > 0L) {
 }
 
 cat("Predicting carbon density for", nrow(input_data), "point(s)...\n")
-predictions <- predict_model(model, prediction_data, se = TRUE)
-if (length(predictions$mean) != nrow(input_data)) {
+PREDICTIONS <- predict_model(model, PREDICTION_DATA)
+if (length(PREDICTIONS$mean) != nrow(input_data)) {
   stop("GPR prediction count does not match the number of input rows.", call. = FALSE)
 }
-input_data$predicted_carbon_density <- predictions$mean
-input_data$predicted_se <- predictions$se
-
-output_dir <- dirname(output_path)
-if (!dir.exists(output_dir) &&
-    !dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
-  stop("Could not create output directory: ", output_dir, call. = FALSE)
+input_data[[PREDICTION_MEAN_COLUMN]] <- PREDICTIONS$mean
+if (!is.null(PREDICTIONS$se)) {
+  input_data[[PREDICTION_SE_COLUMN]] <- PREDICTIONS$se
 }
-readr::write_csv(input_data, output_path)
-cat("Wrote GPR predictions to", output_path, "\n")
+
+OUTPUT_DIR <- dirname(OUTPUT_PATH)
+if (!dir.exists(OUTPUT_DIR) &&
+    !dir.create(OUTPUT_DIR, recursive = TRUE, showWarnings = FALSE)) {
+  stop("Could not create output directory: ", OUTPUT_DIR, call. = FALSE)
+}
+readr::write_csv(input_data, OUTPUT_PATH)
+cat("Wrote GPR predictions to", OUTPUT_PATH, "\n")
