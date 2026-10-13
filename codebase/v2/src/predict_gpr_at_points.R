@@ -368,9 +368,6 @@ if (!requireNamespace("readxl", quietly = TRUE)) {
 
 RASTER_DIR <- file.path("data", "env_rasters")
 RASTER_CONFIG <- build_covariate_config_from_dir(RASTER_DIR)
-if (length(RASTER_CONFIG) == 0L) {
-  stop("No NetCDF raster covariates were found in ", file.path(project_root, RASTER_DIR))
-}
 
 # Configure these project-root-relative paths before running the script.
 input_path <- file.path("data", "review", "PercOC_only_unique_reduced_df_predictions.csv")
