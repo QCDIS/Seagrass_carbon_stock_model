@@ -17,10 +17,14 @@ seagrass_source_project_root <- function() {
       }
       NA_character_
     }
-    starts <- c(getwd())
+    source_files <- unlist(lapply(sys.frames(), function(frame) {
+      ofile <- get0("ofile", envir = frame, inherits = FALSE)
+      if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+    }), use.names = FALSE)
+    starts <- c(getwd(), dirname(source_files))
     ff <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
     if (length(ff)) {
-      script_path <- normalizePath(sub("^--file=", "", ff[[1]]), winslash = "/", mustWork = FALSE)
+      script_path <- sub("^--file=", "", ff[[1]])
       starts <- c(starts, dirname(script_path))
     }
     for (st in unique(starts)) {
@@ -167,13 +171,45 @@ seagrass_init_repo <- function(packages = NULL,
   seagrass_source_project_root()
   project_root <- get("seagrass_setwd_project_root", mode = "function")()
   if (isTRUE(check_renv)) seagrass_check_renv(project_root)
+
+  helper_packages <- if (isTRUE(include_helpers)) c("dplyr", "here", "digest") else character()
+  packages_to_load <- unique(c(helper_packages, packages))
+  if (length(packages_to_load) > 0L) load_packages(packages_to_load)
+
   if (isTRUE(include_helpers)) {
-    source(file.path(project_root, "modelling", "R", "helpers.R"))
+    had_helper_state <- exists(
+      ".seagrass_initializing_helpers",
+      envir = .GlobalEnv,
+      inherits = FALSE
+    )
+    if (had_helper_state) {
+      previous_helper_state <- get(".seagrass_initializing_helpers", envir = .GlobalEnv)
+    }
+    assign(".seagrass_initializing_helpers", TRUE, envir = .GlobalEnv)
+    tryCatch(
+      seagrass_source_project_file(project_root, file.path("modelling", "R", "helpers.R")),
+      finally = {
+        if (had_helper_state) {
+          assign(
+            ".seagrass_initializing_helpers",
+            previous_helper_state,
+            envir = .GlobalEnv
+          )
+        } else if (exists(
+          ".seagrass_initializing_helpers",
+          envir = .GlobalEnv,
+          inherits = FALSE
+        )) {
+          rm(".seagrass_initializing_helpers", envir = .GlobalEnv)
+        }
+      }
+    )
   }
   if (length(source_files) > 0L) {
-    for (f in source_files) source(file.path(project_root, f))
+    for (f in source_files) {
+      seagrass_source_project_file(project_root, f)
+    }
   }
-  if (length(packages) > 0L) load_packages(packages)
   if (isTRUE(require_core_inputs)) seagrass_require_core_inputs(project_root)
   invisible(project_root)
 }

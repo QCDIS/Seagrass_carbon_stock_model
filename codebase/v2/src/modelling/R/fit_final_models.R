@@ -13,12 +13,26 @@
 #   $cv_metrics       – data.frame of tuning fold metrics when loaded from tuning
 #   $train_metrics    – r2 / rmse on the full training set (in-sample)
 #   $scale_params     – list(means, sds) for z-score re-prediction
-#   $encoding         – categorical encoding (levels) for factor predictors used
-#   $encoded_names    – same as predictor_vars (no one-hot expansion)
+#   $encoding         – categorical encoding (levels); GPR uses type gpr_species_adjusted
+#   $encoded_names    – design-matrix column names (env kernel dims for GPR; may differ from predictor_vars)
+#   $species_means    – GPR species fixed-effect means (added back at prediction)
+#   $global_mean      – GPR fallback mean for unseen species levels
 #
 # Usage: sourced from run_paper.R (step 5), or run standalone.
 
-if (!exists("seagrass_init_repo", mode = "function", inherits = TRUE)) source("modelling/R/init_repo.R")
+if (!exists("seagrass_init_repo", mode = "function", inherits = TRUE)) {
+  init_candidates <- file.path("modelling", "R", "init_repo.R")
+  source_files <- unlist(lapply(sys.frames(), function(frame) {
+    ofile <- get0("ofile", envir = frame, inherits = FALSE)
+    if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+  }), use.names = FALSE)
+  init_candidates <- c(init_candidates, file.path(dirname(source_files), "init_repo.R"))
+  init_path <- init_candidates[file.exists(init_candidates)][1]
+  if (is.na(init_path)) {
+    stop("Cannot locate modelling/R/init_repo.R to initialize the project.", call. = FALSE)
+  }
+  sys.source(normalizePath(init_path, winslash = "/", mustWork = TRUE), envir = .GlobalEnv)
+}
 project_root <- seagrass_init_repo(
   packages = c("here", "mgcv", "tidyverse", "randomForest", "GauPro", "xgboost", "sf"),
   source_files = c(
@@ -303,6 +317,8 @@ if ("GPR" %in% model_list) {
     scale_params       = gpr_final_fit$scale_params,
     encoding           = gpr_final_fit$encoding,
     encoded_names      = gpr_final_fit$encoded_names,
+    species_means      = gpr_final_fit$species_means,
+    global_mean        = gpr_final_fit$global_mean,
     cv_metrics        = gpr_cv_metrics,
     train_metrics      = gpr_train_metrics,
     log_response       = log_transform_target

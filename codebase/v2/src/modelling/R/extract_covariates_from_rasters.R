@@ -40,7 +40,7 @@ inspect_nc_file <- function(nc_path) {
 
 #' Build raster_covariates from all NetCDF rasters in a directory (auto-discover variable and dim names)
 build_covariate_config_from_dir <- function(raster_dir = RASTER_DIR) {
-  base <- here::here(raster_dir)
+  base <- file.path(seagrass_project_root(), raster_dir)
   if (!dir.exists(base)) stop("Raster directory not found: ", base)
   files <- list.files(base, pattern = "[.]nc$", full.names = FALSE)
   if (length(files) == 0L) {
@@ -131,7 +131,7 @@ nearest_grid_index <- function(coords, grid_vals) {
 #' @param method Extraction method: "nearest" (default; terra's "simple") or "bilinear" for bilinear interpolation
 #' @return Vector of extracted values (same length as nrow(points))
 extract_from_nc <- function(nc_file, varname, lat_var, lon_var, points, use_closest = TRUE, method = "nearest") {
-  nc_path <- here::here(nc_file)
+  nc_path <- file.path(seagrass_project_root(), nc_file)
   if (!file.exists(nc_path)) {
     stop("NetCDF file not found: ", nc_path)
   }
@@ -206,6 +206,9 @@ extract_covariates_at_points <- function(points,
     stop("points must have 'latitude' and 'longitude' columns")
   }
 
+  cat("covariates:", covariates, "\n")
+  cat("RASTER_CONFIG:", names(RASTER_CONFIG), "\n")
+  
   # Work in lower-case consistently and filter to known covariates
   covariates <- tolower(covariates)
   # covariates <- covariates[covariates %in% raster_covariates]
@@ -220,6 +223,14 @@ extract_covariates_at_points <- function(points,
     if (is.null(progress_callback)) {
       cat("Extracting", covar_name, "...\n")
     }
+
+    print("Processing covariate:")
+    print(covar_name)
+    print("Using config:")
+    print(config$file)
+    print(config$varname)
+    print(config$lat_var)
+    print(config$lon_var)
 
     result[[covar_name]] <- extract_from_nc(
       nc_file = config$file,
@@ -490,8 +501,8 @@ verify_extraction <- function(existing_data,
 
 
 # Auto-build config from all rasters in env_rasters (one entry per .nc file)
-# Base path for final rasters (used by default)
-RASTER_DIR <- "data/env_rasters"
+# Path relative to the v2 project root (used by default)
+RASTER_DIR <- file.path("data", "env_rasters")
 if (!exists("RASTER_CONFIG")) {
   RASTER_CONFIG <- build_covariate_config_from_dir(RASTER_DIR)
   assign("RASTER_CONFIG", RASTER_CONFIG, envir = .GlobalEnv)

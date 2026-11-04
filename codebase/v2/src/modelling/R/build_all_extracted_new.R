@@ -10,7 +10,19 @@
 #   it will do nothing (just print a message)
 #   ELSE: it will re-create the file.
 
-if (!exists("seagrass_init_repo", mode = "function", inherits = TRUE)) source("modelling/R/init_repo.R")
+if (!exists("seagrass_init_repo", mode = "function", inherits = TRUE)) {
+  init_candidates <- file.path("modelling", "R", "init_repo.R")
+  source_files <- unlist(lapply(sys.frames(), function(frame) {
+    ofile <- get0("ofile", envir = frame, inherits = FALSE)
+    if (is.character(ofile) && length(ofile) == 1L && nzchar(ofile)) ofile
+  }), use.names = FALSE)
+  init_candidates <- c(init_candidates, file.path(dirname(source_files), "init_repo.R"))
+  init_path <- init_candidates[file.exists(init_candidates)][1]
+  if (is.na(init_path)) {
+    stop("Cannot locate modelling/R/init_repo.R to initialize the project.", call. = FALSE)
+  }
+  sys.source(normalizePath(init_path, winslash = "/", mustWork = TRUE), envir = .GlobalEnv)
+}
 project_root <- seagrass_init_repo(
   packages = c("here", "dplyr", "ggplot2", "maps", "readr"),
   source_files = c("modelling/R/extract_covariates_from_rasters.R"),

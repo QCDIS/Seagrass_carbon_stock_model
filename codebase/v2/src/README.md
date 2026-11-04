@@ -19,6 +19,11 @@ source("modelling/analysis/run_tuning_seed_sweep.R")
 source("modelling/run_multiseed_pixel_grouped.R")
 ```
 
+The R package requirements used across the modelling and review scripts are listed in
+[`r-requirements.txt`](./r-requirements.txt). To install them without restoring the
+project's pinned `renv` environment, run `install.packages(readLines("r-requirements.txt"))`.
+The list is unpinned; use `renv::restore()` for the reproducible project environment.
+
 Generated files are stored under `output/`. The robust multiseed driver writes a **run-scoped** folder named from the selection seeds, e.g. `output/pixel_grouped_48-52-53-70-73/` (see `robust_fold_seed_list` / `seed_registry` in `pipeline_config.R`). That folder holds covariate selection, robust tuning/evaluation, diagnostics, and run metadata. Shared regime outputs (e.g. `output/pixel_grouped/covariate_selection/`) still use `cv_output_dir` from `cv_regime_name`. Cached artefacts shared across runs (e.g. prediction grids, fold caches) go in `output/cache/`.
 
 ---
@@ -209,9 +214,42 @@ All fold types are cached/reused via `output/cache/` to speed up re-runs.
 4. Once models have been saved and predictions generated, the `prediction_maps.ipynb` Jupyter notebook can be used to generate the predictive maps of carbon stocks. This requires downloading extra datasets (see below).
 Seed policy is documented in `modelling/_SEED_REGISTRY.md`.
 
-### Python environment for `prediction_maps.ipynb`
+### Point predictions with the GPR model
 
-Use a clean virtual environment and install the notebook dependencies from `requirements.txt` via a `bash` terminal:
+Set `input_path`, `model_path`, and `output_path` near the top of
+`predict_gpr_at_points.R` (paths are relative to `codebase/v2/src`). Run the
+script directly without command-line arguments:
+
+```bash
+Rscript predict_gpr_at_points.R
+```
+
+Alternatively, set `SEAGRASS_V2_ROOT` to the clone root,
+`codebase/v2`, or `codebase/v2/src` before sourcing the script:
+
+```r
+Sys.setenv(SEAGRASS_V2_ROOT = "/home/jovyan/Seagrass_carbon_stock_model")
+```
+
+An invalid explicit path fails instead of falling back to another clone.
+Successful startup switches the working directory to the resolved v2 source
+root.
+
+The input must include `longitude`, `latitude`, and `seagrass_species`. The
+configured model defaults to `data/review/GPR_final.rds`.
+
+Startup regression checks use Python's standard library and base R only:
+
+```bash
+python tests/test_point_prediction_startup.py
+```
+
+If `Rscript` is not on `PATH`, add `--rscript` with the path to its executable.
+These checks exercise discovery and script initialization, not model predictions.
+
+### Python environment for `prediction_maps.ipynb` and `python_helpers`
+
+The requirements include the notebook and its `python_helpers` modules. Use a clean virtual environment and install them from `requirements.txt` via a `bash` terminal:
 
 ```bash
 python3 -m venv .venv
@@ -220,9 +258,72 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+### Standalone R carbon stock map
+
+`predict_gpr_sg_carbon_stock.ipynb` predicts **sediment** carbon stock with a
+saved GPR model directly from mapped European seagrass polygons, without
+retraining or running the Python notebook. The notebook uses the same
+saved-model loading, covariate-extraction, and prediction workflow as
+`predict_gpr_at_maps.R` and `predict_gpr_at_points.R`.
+
+The notebook defaults to the saved model at `data/review/GPR_final.rds` and
+polygon source at `data/seagrass_eov_poly_2025.csv`. Configure
+`model_path`, `meadow_path`, `output_dir`, and `depth_cm` in the notebook's
+first cell, select its R kernel, and run the prediction cell. Paths are
+relative to `codebase/v2/src`. The CSV is converted in chunks to a cached
+European GeoPackage in the output directory; subsequent runs reuse that cache.
+For a different mount location, set
+`project_path` in the first cell to the clone root, `codebase/v2`, or
+`codebase/v2/src`; the notebook otherwise discovers the source tree from the
+kernel working directory and its ancestors.
+
+Restore the existing `renv.lock` environment from `codebase/v2/src`, then run:
+
+```bash
+Rscript predict_gpr_at_maps.R \
+  data/review/GPR_final.rds \
+  data/seagrass_eov_poly_2025.csv output/pixel_grouped/stocks 100
+```
+
+Paths are resolved relative to the calling directory; the script can also be
+invoked by its absolute path. Use `--help` for the argument summary.
+
+Required inputs:
+
+- A final GPR bundle from `modelling/R/fit_final_models.R`.
+- The seagrass EOV polygon CSV (`data/seagrass_eov_poly_2025.csv`) or a
+  single-layer polygon GeoPackage (or another `sf::st_read`-compatible polygon
+  dataset) with a defined CRS and training-compatible category labels such as
+  `seagrass_species`. For the CSV, the script derives species from its EOV
+  habitat fields, restricts polygons to the European study bounds, and caches
+  the prepared polygons as `seagrass_meadows_gpr.gpkg` in the output directory.
+  Restrict polygons to the model's intended prediction domain and remove
+  overlapping/duplicate meadow records before estimating totals.
+- Environmental NetCDF files in `data/env_rasters/`, as described below. Raster
+  predictors are extracted at one point inside each meadow. Non-raster
+  predictors must be meadow attributes; missing `region` values are assigned
+  using `data/MEOW/meow_ecos.shp` if the model requires them.
+
+The script reuses saved scaling, categorical encoding and log-response
+back-transformation. It writes `carbon_stock_map.png` (kg C/ha),
+`carbon_stock_predictions.gpkg`, and `carbon_stock_predictions.csv`. Tables
+include carbon density (g C/cm³), area (m²), stock (kg C/ha and Gg C per meadow),
+available prediction SEs, and a status for every meadow. Missing covariates,
+unseen categories, and invalid/negative predictions remain missing rather
+than being imputed or silently assigned another species.
+
+Stock conversion uses `density × depth_cm × 1e5` for kg C/ha and
+`density × depth_cm × 1e4 × area_m2 / 1e9` for Gg C, matching the notebook.
+Depth defaults to 100 cm and **must match the model's target depth**. Areas use
+the European equal-area CRS EPSG:3035. A single representative-point prediction
+is assumed uniform within each meadow, so large heterogeneous polygons should
+be subdivided before prediction. No nearest-valid coastal filling is performed.
+SEs cover model prediction uncertainty only, not meadow extent, depth or
+within-meadow variability; log-model SEs use the existing delta approximation.
+
 ## Environmental data
 
-The NetCDF raster files containing environmental covariates (from remote sensing and re-analysis products) are stored via Zenodo (persistent identifier: [https://doi.org/10.5281/zenodo.19329403](https://doi.org/10.5281/zenodo.19329403)). Download and place all `.nc` files under `data/env_rasters/`. The pipeline will auto-discover these covariates at runtime via the `build_covariate_config_from_dir` function in `modelling/R/extract_covariates_from_rasters.R`.
+The NetCDF raster files containing environmental covariates (from remote sensing and re-analysis products) are stored via Zenodo (persistent identifier: [https://doi.org/10.5281/zenodo.19329403](https://doi.org/10.5281/zenodo.19329403)). Download and place all `.nc` files under `data/env_rasters/`, relative to the v2 project root (`codebase/v2/src`), not the Git repository root. The pipeline will auto-discover these covariates at runtime via the `build_covariate_config_from_dir` function in `modelling/R/extract_covariates_from_rasters.R`. Raster discovery and extraction resolve these relative paths using `seagrass_project_root()` from the repository bootstrap.
 
 ## Regions data
 
@@ -256,4 +357,3 @@ Exclusive Economic Zones (EEZs) were obtained from the Marine Regions website vi
 
 - This workflow is designed for gap-filling near sampled conditions; extrapolation to novel environments may degrade (as shown when datasets `cv_type = "spatial`).
 - Reported performance depends on fold construction and seed policy; robust multiseed evaluation is used to reduce split-variance artifacts.
-
